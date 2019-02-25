@@ -1,107 +1,111 @@
 import pygame
  
-import constants
+from constants import *
 import levels
  
 from player import Player
- 
-def main():
-    """ Main Program """
-    pygame.init()
- 
-    # Set the height and width of the screen
-    size = [constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT]
-    screen = pygame.display.set_mode(size)
- 
-    pygame.display.set_caption("Platformer with sprite sheets")
- 
-    # Create the player
-    player = Player()
- 
-    # Create all the levels
-    level_list = []
-    level_list.append(levels.Level_01(player))
-    level_list.append(levels.Level_02(player))
- 
-    # Set the current level
-    current_level_no = 0
-    current_level = level_list[current_level_no]
- 
-    active_sprite_list = pygame.sprite.Group()
-    player.level = current_level
- 
-    player.rect.x = 340
-    player.rect.y = constants.SCREEN_HEIGHT - player.rect.height
-    active_sprite_list.add(player)
- 
-    #Loop until the user clicks the close button.
-    done = False
- 
-    # Used to manage how fast the screen updates
-    clock = pygame.time.Clock()
- 
-    # -------- Main Program Loop -----------
-    while not done:
-        for event in pygame.event.get(): # User did something
-            if event.type == pygame.QUIT: # If user clicked close
-                done = True # Flag that we are done so we exit this loop
- 
+
+class Game:
+    def __init__(self):
+        pygame.init()
+        size = [SCREEN_WIDTH, SCREEN_HEIGHT]
+        self.screen = pygame.display.set_mode(size)
+        pygame.display.set_caption(TITLE)
+        self.clock = pygame.time.Clock()
+        self.font_name = pygame.font.match_font(FONT)
+        self.running = True
+        
+    def new(self):
+        self.level_list = []
+        self.player = Player()
+        self.active_sprite_list = pygame.sprite.Group()
+        self.level_list.append(levels.Level_01(self.player))
+        self.level_list.append(levels.Level_02(self.player))
+        self.level = 0
+        self.current_level = self.level_list[self.level]
+        self.player.level = self.current_level
+        self.active_sprite_list.add(self.player)
+        self.run()
+    
+    def run(self):
+        self.playing = True
+        while self.playing:
+            self.clock.tick(FPS)
+            self.events()
+            self.update()
+            self.draw()
+            
+    
+    def update(self):
+        self.active_sprite_list.update()
+        self.current_level.update()
+         # If the player gets near the right side, shift the world left (-x)
+        if self.player.rect.right >= 500:
+            diff = self.player.rect.right - 500
+            self.player.rect.right = 500
+            self.current_level.shift_world(-diff)
+
+        # If the player gets near the left side, shift the world right (+x)
+        if self.player.rect.left <= 120:
+            diff = 120 - self.player.rect.left
+            self.player.rect.left = 120
+            self.current_level.shift_world(diff)
+
+        # If the player gets to the end of the level, go to the next level
+        current_position = self.player.rect.x + self.current_level.world_shift
+        if current_position < self.current_level.level_limit:
+            self.player.rect.x = 120
+            if self.level < len(self.level_list)-1:
+                self.level += 1
+                self.current_level = self.level_list[self.level]
+                self.player.level = self.current_level
+
+        
+    def events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                if self.playing:
+                    self.playing = False
+                self.running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    player.go_left()
+                    self.player.go_left()
                 if event.key == pygame.K_RIGHT:
-                    player.go_right()
+                    self.player.go_right()
                 if event.key == pygame.K_UP:
-                    player.jump()
- 
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT and player.change_x < 0:
-                    player.stop()
-                if event.key == pygame.K_RIGHT and player.change_x > 0:
-                    player.stop()
- 
-        # Update the player.
-        active_sprite_list.update()
- 
-        # Update items in the level
-        current_level.update()
- 
-        # If the player gets near the right side, shift the world left (-x)
-        if player.rect.right >= 500:
-            diff = player.rect.right - 500
-            player.rect.right = 500
-            current_level.shift_world(-diff)
-  
-        # If the player gets near the left side, shift the world right (+x)
-        if player.rect.left <= 120:
-            diff = 120 - player.rect.left
-            player.rect.left = 120
-            current_level.shift_world(diff)
- 
-        # If the player gets to the end of the level, go to the next level
-        current_position = player.rect.x + current_level.world_shift
-        if current_position < current_level.level_limit:
-            player.rect.x = 120
-            if current_level_no < len(level_list)-1:
-                current_level_no += 1
-                current_level = level_list[current_level_no]
-                player.level = current_level
- 
-        # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
-        current_level.draw(screen)
-        active_sprite_list.draw(screen)
- 
-        # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
- 
-        # Limit to 60 frames per second
-        clock.tick(60)
- 
-        # Go ahead and update the screen with what we've drawn.
+                    self.player.jump()
+
+                
+    def draw(self):
+        self.screen.fill(BLACK)
+        self.current_level.draw(self.screen)
+        self.active_sprite_list.draw(self.screen)
+        self.clock.tick(FPS)
         pygame.display.flip()
- 
-    # Be IDLE friendly. If you forget this line, the program will 'hang'
-    # on exit.
-    pygame.quit()
- 
-if __name__ == "__main__":
-    main()
+
+        
+    def show_start_screen(self):
+        self.screen.fill(WHITE)
+        self.draw_text("Math Game", 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
+        self.draw_text("Arrows to move, space to shoot", 22, BLACK, SCREEN_WIDTH /2 , SCREEN_HEIGHT/2)
+        self.draw_text("Press a key to play", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
+        pygame.display.flip()
+        self.wait_for_key()
+        
+    def wait_for_key(self):
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    waiting = False
+                    self.running = False
+                if event.type == pygame.KEYUP:
+                    waiting = False
+                    
+    def draw_text(self, text, size, color, x, y):
+        font = pygame.font.Font(self.font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x, y)
+        self.screen.blit(text_surface, text_rect)

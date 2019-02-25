@@ -12,4 +12,12 @@ BLUE = (0, 0, 255)
 # Screen dimensions
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
- 
+
+# Frame per seconds
+FPS = 60
+
+# Title 
+TITLE = "Math Game"
+
+#Font 
+FONT = "Arial"

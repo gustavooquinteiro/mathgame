@@ -1,6 +1,5 @@
 import pygame
-import constants
-from spritesheets_functions import SpriteSheet
+from spritesheet_functions import SpriteSheet
 import random 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
