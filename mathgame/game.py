@@ -4,6 +4,7 @@ from constants import *
 import levels
  
 from player import Player
+from enemies import Enemy
 
 class Game:
     def __init__(self):
@@ -23,6 +24,7 @@ class Game:
         self.level_list = []
         self.player = Player()
         self.active_sprite_list = pygame.sprite.Group()
+        self.enemy_list = pygame.sprite.Group()
         self.level_list.append(levels.Level_01(self.player))
         self.level_list.append(levels.Level_02(self.player))
         self.level_list.append(levels.Level_03(self.player))
@@ -35,13 +37,18 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
-            self.clock.tick(FPS)
             self.events()
             self.update()
             self.draw()
             
     
     def update(self):
+        if self.player.iskill:
+            self.playing = False
+            self.gameover()
+            return
+            
+        
         self.active_sprite_list.update()
         self.current_level.update()
          # If the player gets near the right side, shift the world left (-x)
@@ -108,12 +115,22 @@ class Game:
                     
                 if event.key == pygame.K_DOWN:
                     self.player.stop()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    self.countrepeatright = 0
+                    self.player.stop()
+                if event.key == pygame.K_LEFT:
+                    self.countrepeatleft = 0
+                    self.player.stop()
 
                 
     def draw(self):
         self.screen.fill(BLACK)
         self.current_level.draw(self.screen)
         self.active_sprite_list.draw(self.screen)
+        self.enemy_list.draw(self.screen)
+        for e in self.enemy_list:
+            e.move()
         self.clock.tick(FPS)
         pygame.display.flip()
 
@@ -126,6 +143,14 @@ class Game:
         pygame.display.flip()
         self.wait_for_key()
         
+    def gameover(self):
+        self.screen.fill(WHITE)
+        self.draw_text("Game Over", 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
+        self.draw_text("Press q to quit or any other key to play again", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
+
+        pygame.display.flip()
+        self.wait_for_key()
+        
     def wait_for_key(self):
         waiting = True
         while waiting:
@@ -135,6 +160,8 @@ class Game:
                     waiting = False
                     self.running = False
                 if event.type == pygame.KEYUP:
+                    if event.key == ord('q'):
+                        self.running = False
                     waiting = False
                     
     def draw_text(self, text, size, color, x, y):

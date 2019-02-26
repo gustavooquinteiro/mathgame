@@ -9,8 +9,10 @@ import levels
 
 from platforms import MovingPlatform
 from spritesheet_functions import SpriteSheet
- 
-class Player(pygame.sprite.Sprite):
+from character import Character
+from projectile import Projectile
+
+class Player(Character):
     """ This class represents the bar at the bottom that the player
     controls. """
  
@@ -42,6 +44,8 @@ class Player(pygame.sprite.Sprite):
         self.countspace = 0
         self.countrepeatright = 0
         self.countrepeatleft = 0
+        self.iskill = False
+         
  
         sprite_sheet = SpriteSheet("spritesheet/p1_walk.png")
         # Load all the right facing images into a list
@@ -134,18 +138,9 @@ class Player(pygame.sprite.Sprite):
  
             if isinstance(block, MovingPlatform):
                 self.rect.x += block.change_x
- 
-    def calc_grav(self):
-        """ Calculate effect of gravity. """
-        if self.change_y == 0:
-            self.change_y = 1
-        else:
-            self.change_y += .35
- 
-        # See if we are on the ground.
-        if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
-            self.change_y = 0
-            self.rect.y = SCREEN_HEIGHT - self.rect.height
+        if self.rect.bottom == SCREEN_HEIGHT:
+            self.kill()
+            self.iskill = True
  
     def jump(self):
         """ Called when user hits 'jump' button. """
@@ -159,16 +154,15 @@ class Player(pygame.sprite.Sprite):
         self.rect.y -= 2
 
     # If it is ok to jump, set our speed upwards
-        if len(platform_hit_list) > 0 or self.rect.bottom >= SCREEN_HEIGHT:
+        if len(platform_hit_list) > 0 or self.rect.bottom > SCREEN_HEIGHT:
             self.change_y = -10
  
     def doublejump(self):
-        if isinstance(self.level, levels.Level_03):
-            self.change_y = -15
+        #if isinstance(self.level, levels.Level_03):
+        self.change_y = -15
  
     def power(self):
         #if isinstance(self.level, levels.Level_03):
-        self.shoot = True
         self.shoot()
         # Shoot something
         print("power")
@@ -179,7 +173,9 @@ class Player(pygame.sprite.Sprite):
         self.power += 1
             
     def shoot(self):
-        print("shoot")
+        #self.shoot = Projectile(self.power, [], )
+        pass
+        
         
     def sprint(self, direction):
         self.direction = direction

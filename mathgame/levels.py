@@ -2,6 +2,7 @@ import pygame
  
 import constants
 import platforms
+from enemies import Enemy
  
 class Level():
     """ This is a generic super-class used to define a level.
@@ -58,6 +59,12 @@ class Level():
  
         for enemy in self.enemy_list:
             enemy.rect.x += shift_x
+
+    def spawn(self, local):
+        enemy = Enemy(local[0], local[1], self.player)
+        self.enemy_list.add(enemy)
+        return self.enemy_list
+    
  
 # Create platforms for the level
 class Level_01(Level):
@@ -74,9 +81,9 @@ class Level_01(Level):
         self.level_limit = -2500
  
         # Array with type of platform, and x, y location of the platform.
-        """        level = [ [platforms.GRASS_LEFT, 500, 500],
-                  [platforms.GRASS_MIDDLE, 570, 500],
-                  [platforms.GRASS_RIGHT, 640, 500],
+        level = [ [platforms.GRASS_LEFT, 0, 500],
+                  [platforms.GRASS_MIDDLE, 10, 500],
+                  [platforms.GRASS_RIGHT, 15, 500],
                   [platforms.GRASS_LEFT, 800, 400],
                   [platforms.GRASS_MIDDLE, 870, 400],
                   [platforms.GRASS_RIGHT, 940, 400],
@@ -88,7 +95,6 @@ class Level_01(Level):
                   [platforms.STONE_PLATFORM_RIGHT, 1260, 280],
                   ]
         
-        level=[[]]
  
         # Go through the array above and add platforms
         for platform in level:
@@ -109,7 +115,7 @@ class Level_01(Level):
         block.level = self
         self.platform_list.add(block)
  
- """
+
 # Create platforms for the level
 class Level_02(Level):
     """ Definition for level 2. """
@@ -158,6 +164,7 @@ class Level_02(Level):
         block.player = self.player
         block.level = self
         self.platform_list.add(block) 
+        
 
 class Level_03(Level):
     def __init__(self, player):

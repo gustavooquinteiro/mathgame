@@ -2,7 +2,7 @@ import pygame
 import platforms
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, damage, speed =0.2, direction, position):
+    def __init__(self, damage=1, speed =0.2, direction=[10,20], position=2):
         super().__init__()
         self.damage = damage
         self.speed = speed
