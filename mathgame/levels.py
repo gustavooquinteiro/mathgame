@@ -158,3 +158,14 @@ class Level_02(Level):
         block.player = self.player
         block.level = self
         self.platform_list.add(block) 
+
+class Level_03(Level):
+    def __init__(self, player):
+        Level.__init__(self, player)
+        self.background = pygame.image.load("spritesheet/background_01.png").convert()
+        self.background.set_colorkey(constants.WHITE)
+        self.level_limit = -5000
+        
+        
+    
+        

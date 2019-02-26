@@ -4,7 +4,7 @@ controlled sprite on the screen.
 """
 import pygame
  
-import constants
+from constants import *
 import levels
 
 from platforms import MovingPlatform
@@ -37,6 +37,11 @@ class Player(pygame.sprite.Sprite):
  
         # List of sprites we can bump against
         self.level = None
+        self.shoot = False
+        self.power = 1
+        self.countspace = 0
+        self.countrepeatright = 0
+        self.countrepeatleft = 0
  
         sprite_sheet = SpriteSheet("spritesheet/p1_walk.png")
         # Load all the right facing images into a list
@@ -138,9 +143,9 @@ class Player(pygame.sprite.Sprite):
             self.change_y += .35
  
         # See if we are on the ground.
-        if self.rect.y >= constants.SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
+        if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
             self.change_y = 0
-            self.rect.y = constants.SCREEN_HEIGHT - self.rect.height
+            self.rect.y = SCREEN_HEIGHT - self.rect.height
  
     def jump(self):
         """ Called when user hits 'jump' button. """
@@ -148,20 +153,42 @@ class Player(pygame.sprite.Sprite):
         # move down a bit and see if there is a platform below us.
         # Move down 2 pixels because it doesn't work well if we only move down 1
         # when working with a platform moving down.
-        if isinstance(self.level, levels.Level_02):
-            self.rect.y += 2
-            platform_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
-            self.rect.y -= 2
+        #if isinstance(self.level, levels.Level_02):
+        self.rect.y += 2
+        platform_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
+        self.rect.y -= 2
+
+    # If it is ok to jump, set our speed upwards
+        if len(platform_hit_list) > 0 or self.rect.bottom >= SCREEN_HEIGHT:
+            self.change_y = -10
  
-        # If it is ok to jump, set our speed upwards
-            if len(platform_hit_list) > 0 or self.rect.bottom >= constants.SCREEN_HEIGHT:
-                self.change_y = -10
+    def doublejump(self):
+        if isinstance(self.level, levels.Level_03):
+            self.change_y = -15
  
     def power(self):
-        if isinstance(self.level, levels.Level_03):
-            # Shoot something
-            print("power")
+        #if isinstance(self.level, levels.Level_03):
+        self.shoot = True
+        self.shoot()
+        # Shoot something
+        print("power")
+        self.power = 1
             
+    def increasepower(self):
+        #if isinstance(self.level, levels.Level_04):
+        self.power += 1
+            
+    def shoot(self):
+        print("shoot")
+        
+    def sprint(self, direction):
+        self.direction = direction
+        if self.direction is "L":
+            self.change_x = -24
+        elif self.direction is "R":
+            self.change_x = 24
+            
+    
     # Player-controlled movement:
     def go_left(self):
         """ Called when the user hits the left arrow. """

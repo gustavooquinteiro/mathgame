@@ -8,12 +8,16 @@ from player import Player
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.key.set_repeat(1, 500)
         size = [SCREEN_WIDTH, SCREEN_HEIGHT]
         self.screen = pygame.display.set_mode(size)
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.font_name = pygame.font.match_font(FONT)
         self.running = True
+        self.countspace = 0
+        self.countrepeatleft = 0
+        self.countrepeatright = 0
         
     def new(self):
         self.level_list = []
@@ -21,6 +25,7 @@ class Game:
         self.active_sprite_list = pygame.sprite.Group()
         self.level_list.append(levels.Level_01(self.player))
         self.level_list.append(levels.Level_02(self.player))
+        self.level_list.append(levels.Level_03(self.player))
         self.level = 0
         self.current_level = self.level_list[self.level]
         self.player.level = self.current_level
@@ -68,12 +73,41 @@ class Game:
                     self.playing = False
                 self.running = False
             if event.type == pygame.KEYDOWN:
+                
                 if event.key == pygame.K_LEFT:
-                    self.player.go_left()
+                    self.countrepeatleft += 1
+                    if self.countrepeatleft > 1:
+                        print("sprint l")
+                        self.player.sprint("L")
+                        self.countrepeatleft = 0
+                        self.countrepeatright = 0
+                    else:
+                        self.player.go_left()
+                        
                 if event.key == pygame.K_RIGHT:
-                    self.player.go_right()
+                    self.countrepeatright += 1
+                    if self.countrepeatright > 1:
+                        print("sprint r")
+                        self.player.sprint("R")
+                        self.countrepeatright = 0
+                        self.countrepeatleft = 0
+                    else:
+                        self.player.go_right()
+                        
                 if event.key == pygame.K_UP:
+                    self.countspace += 1;
+                    if self.countspace > 1:
+                        print("doublejump")
+                        self.player.doublejump()
+                        self.countspace = 0
                     self.player.jump()
+                    
+                if event.key == pygame.K_SPACE:                    
+                    self.player.increasepower()
+                    print("increasing power..")
+                    
+                if event.key == pygame.K_DOWN:
+                    self.player.stop()
 
                 
     def draw(self):
