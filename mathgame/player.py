@@ -6,11 +6,11 @@ import pygame
  
 from constants import *
 import levels
-
 from platforms import MovingPlatform
 from spritesheet_functions import SpriteSheet
 from character import Character
 from projectile import Projectile
+from exceptions import InsufficientLevel
 
 class Player(Character):
     """ This class represents the bar at the bottom that the player
@@ -23,6 +23,9 @@ class Player(Character):
  
         # Call the parent's constructor
         super().__init__()
+        
+        self.health = 100
+ 
  
         # -- Attributes
         # Set speed vector of player
@@ -45,7 +48,6 @@ class Player(Character):
         self.countrepeatright = 0
         self.countrepeatleft = 0
         self.iskill = False
-         
  
         sprite_sheet = SpriteSheet("spritesheet/p1_walk.png")
         # Load all the right facing images into a list
@@ -158,8 +160,12 @@ class Player(Character):
             self.change_y = -10
  
     def doublejump(self):
-        #if isinstance(self.level, levels.Level_03):
         self.change_y = -15
+            
+    def hit(self, damage):
+        self.health -= damage
+        if self.health <= 0:
+            self.iskill = True
  
     def power(self):
         #if isinstance(self.level, levels.Level_03):
@@ -168,15 +174,10 @@ class Player(Character):
         print("power")
         self.power = 1
             
-    def increasepower(self):
+    def increasepower(self, multiplier=1):
         #if isinstance(self.level, levels.Level_04):
-        self.power += 1
-            
-    def shoot(self):
-        #self.shoot = Projectile(self.power, [], )
-        pass
-        
-        
+        self.power += 1 *multiplier
+                    
     def sprint(self, direction):
         self.direction = direction
         if self.direction is "L":

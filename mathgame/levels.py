@@ -75,6 +75,9 @@ class Level_01(Level):
  
         # Call the parent constructor
         Level.__init__(self, player)
+        self.enemies = []
+        for i in range(3):
+            self.enemies.append(Enemy(800 + 200*i, 400+ 30*i, self.player))
  
         self.background = pygame.image.load("spritesheet/background_01.png").convert()
         self.background.set_colorkey(constants.WHITE)

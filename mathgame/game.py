@@ -2,9 +2,10 @@ import pygame
  
 from constants import *
 import levels
- 
+import time 
 from player import Player
 from enemies import Enemy
+from projectile import Projectile
 
 class Game:
     def __init__(self):
@@ -19,12 +20,15 @@ class Game:
         self.countspace = 0
         self.countrepeatleft = 0
         self.countrepeatright = 0
+        self.duration = 0
         
     def new(self):
         self.level_list = []
         self.player = Player()
+        #for i in range(4):
+        #   self.enemies.append(Enemy(800 + i, 400 - i, self.player))
+        self.bullets = []
         self.active_sprite_list = pygame.sprite.Group()
-        self.enemy_list = pygame.sprite.Group()
         self.level_list.append(levels.Level_01(self.player))
         self.level_list.append(levels.Level_02(self.player))
         self.level_list.append(levels.Level_03(self.player))
@@ -74,6 +78,17 @@ class Game:
 
         
     def events(self):
+        for bullet in self.bullets:
+            for enemies in self.current_level.enemies:
+                if bullet.y - bullet.radius < enemies.rect.y + 40 and bullet.y + bullet.radius > enemies.rect.y:
+                    if bullet.x + bullet.radius > enemies.rect.x and bullet.x - bullet.radius < enemies.rect.x + 60:
+                        enemies.loseenergy(self.player.power)
+                        self.bullets.pop(self.bullets.index(bullet))
+            if bullet.x < SCREEN_WIDTH and bullet.x > 0:
+                bullet.x += bullet.vel
+            else:
+                self.bullets.pop(self.bullets.index(bullet))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 if self.playing:
@@ -82,9 +97,8 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 
                 if event.key == pygame.K_LEFT:
-                    self.countrepeatleft += 1
+                    self.countrepeatleft -= time.time() 
                     if self.countrepeatleft > 1:
-                        print("sprint l")
                         self.player.sprint("L")
                         self.countrepeatleft = 0
                         self.countrepeatright = 0
@@ -92,9 +106,8 @@ class Game:
                         self.player.go_left()
                         
                 if event.key == pygame.K_RIGHT:
-                    self.countrepeatright += 1
+                    self.countrepeatright -= time.time()
                     if self.countrepeatright > 1:
-                        print("sprint r")
                         self.player.sprint("R")
                         self.countrepeatright = 0
                         self.countrepeatleft = 0
@@ -102,19 +115,24 @@ class Game:
                         self.player.go_right()
                         
                 if event.key == pygame.K_UP:
-                    self.countspace += 1;
+                    self.countspace += 1
                     if self.countspace > 1:
-                        print("doublejump")
                         self.player.doublejump()
                         self.countspace = 0
                     self.player.jump()
                     
-                if event.key == pygame.K_SPACE:                    
-                    self.player.increasepower()
-                    print("increasing power..")
+                if event.key == pygame.K_SPACE: 
+                    if self.player.direction is "R":
+                        facing = 1
+                    else:
+                        facing = -1
                     
+                    if len(self.bullets) < 5:
+                        self.bullets.append(Projectile(round(self.player.rect.x + 10), round(self.player.rect.y +5 ), 6, BLACK, facing, self.player.power))
+                
                 if event.key == pygame.K_DOWN:
                     self.player.stop()
+                    
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT:
                     self.countrepeatright = 0
@@ -122,32 +140,38 @@ class Game:
                 if event.key == pygame.K_LEFT:
                     self.countrepeatleft = 0
                     self.player.stop()
+            self.duration += 1
 
-                
     def draw(self):
         self.screen.fill(BLACK)
         self.current_level.draw(self.screen)
         self.active_sprite_list.draw(self.screen)
-        self.enemy_list.draw(self.screen)
-        for e in self.enemy_list:
-            e.move()
+        for bullet in self.bullets:
+            bullet.draw(self.screen)
         self.clock.tick(FPS)
+        for enemies in self.current_level.enemies:
+            enemies.draw(self.screen)
+            font = pygame.font.SysFont('arial', 20, True)
+            text = font.render("Lvl {}".format(enemies.power), 1, WHITE)
+            self.screen.blit(text, (enemies.rect.x- 10, enemies.rect.y - 20))
+        text = font.render("Health {}" .format(self.player.health), 1, WHITE)
+        self.screen.blit(text, (self.player.rect.x -10, self.player.rect.y -20))
         pygame.display.flip()
+        pygame.display.update()
 
         
     def show_start_screen(self):
         self.screen.fill(WHITE)
         self.draw_text("Math Game", 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
         self.draw_text("Arrows to move, space to shoot", 22, BLACK, SCREEN_WIDTH /2 , SCREEN_HEIGHT/2)
-        self.draw_text("Press a key to play", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
+        self.draw_text("Press enter to play", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
         pygame.display.flip()
         self.wait_for_key()
         
     def gameover(self):
         self.screen.fill(WHITE)
         self.draw_text("Game Over", 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
-        self.draw_text("Press q to quit or any other key to play again", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
-
+        self.draw_text("Press q to quit or enter to play again", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
         pygame.display.flip()
         self.wait_for_key()
         
@@ -162,7 +186,9 @@ class Game:
                 if event.type == pygame.KEYUP:
                     if event.key == ord('q'):
                         self.running = False
-                    waiting = False
+                        waiting = False
+                    if event.key == pygame.K_RETURN:
+                        waiting = False
                     
     def draw_text(self, text, size, color, x, y):
         font = pygame.font.Font(self.font_name, size)
