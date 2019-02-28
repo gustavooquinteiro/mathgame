@@ -18,7 +18,7 @@ class Enemy(Character):
         self.vy = 0        
         self.player = player
         self.change_y = 0
-        self.count = 0
+        self.count = 0 
         self.power = random.randint(-9, 9)
         if self.power > 0:
             self.image.fill(BLUE)

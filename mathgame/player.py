@@ -164,15 +164,8 @@ class Player(Character):
             
     def hit(self, damage):
         self.health -= damage
-        if self.health <= 0:
+        if self.health < 0:
             self.iskill = True
- 
-    def power(self):
-        #if isinstance(self.level, levels.Level_03):
-        self.shoot()
-        # Shoot something
-        print("power")
-        self.power = 1
             
     def increasepower(self, multiplier=1):
         #if isinstance(self.level, levels.Level_04):

@@ -21,6 +21,7 @@ class Game:
         self.countrepeatleft = 0
         self.countrepeatright = 0
         self.duration = 0
+        self.gameispaused = False
         
     def new(self):
         self.level_list = []
@@ -52,29 +53,29 @@ class Game:
             self.gameover()
             return
             
-        
-        self.active_sprite_list.update()
-        self.current_level.update()
-         # If the player gets near the right side, shift the world left (-x)
-        if self.player.rect.right >= 500:
-            diff = self.player.rect.right - 500
-            self.player.rect.right = 500
-            self.current_level.shift_world(-diff)
+        if not self.gameispaused:
+            self.active_sprite_list.update()
+            self.current_level.update()
+            # If the player gets near the right side, shift the world left (-x)
+            if self.player.rect.right >= 500:
+                diff = self.player.rect.right - 500
+                self.player.rect.right = 500
+                self.current_level.shift_world(-diff)
 
-        # If the player gets near the left side, shift the world right (+x)
-        if self.player.rect.left <= 120:
-            diff = 120 - self.player.rect.left
-            self.player.rect.left = 120
-            self.current_level.shift_world(diff)
+            # If the player gets near the left side, shift the world right (+x)
+            if self.player.rect.left <= 120:
+                diff = 120 - self.player.rect.left
+                self.player.rect.left = 120
+                self.current_level.shift_world(diff)
 
-        # If the player gets to the end of the level, go to the next level
-        current_position = self.player.rect.x + self.current_level.world_shift
-        if current_position < self.current_level.level_limit:
-            self.player.rect.x = 120
-            if self.level < len(self.level_list)-1:
-                self.level += 1
-                self.current_level = self.level_list[self.level]
-                self.player.level = self.current_level
+            # If the player gets to the end of the level, go to the next level
+            current_position = self.player.rect.x + self.current_level.world_shift
+            if current_position < self.current_level.level_limit:
+                self.player.rect.x = 120
+                if self.level < len(self.level_list)-1:
+                    self.level += 1
+                    self.current_level = self.level_list[self.level]
+                    self.player.level = self.current_level
 
         
     def events(self):
@@ -95,6 +96,9 @@ class Game:
                     self.playing = False
                 self.running = False
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    self.gameispaused = True
+                    self.pausescreen()
                 
                 if event.key == pygame.K_LEFT:
                     self.countrepeatleft -= time.time() 
@@ -152,10 +156,11 @@ class Game:
         for enemies in self.current_level.enemies:
             enemies.draw(self.screen)
             font = pygame.font.SysFont('arial', 20, True)
-            text = font.render("Lvl {}".format(enemies.power), 1, WHITE)
+            text = font.render("Força {}".format(enemies.power), 1, WHITE)
             self.screen.blit(text, (enemies.rect.x- 10, enemies.rect.y - 20))
         text = font.render("Health {}" .format(self.player.health), 1, WHITE)
         self.screen.blit(text, (self.player.rect.x -10, self.player.rect.y -20))
+        
         pygame.display.flip()
         pygame.display.update()
 
@@ -174,7 +179,14 @@ class Game:
         self.draw_text("Press q to quit or enter to play again", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
         pygame.display.flip()
         self.wait_for_key()
-        
+    
+    def pausescreen(self):
+        self.draw_text("Game Paused", 22, WHITE, SCREEN_WIDTH /2, SCREEN_HEIGHT/4)
+        self.draw_text("Press q to quit", 22, WHITE,SCREEN_WIDTH /2, SCREEN_HEIGHT * 1/2 )
+        self.draw_text("Press Enter to continue", 20, WHITE, SCREEN_WIDTH /2, SCREEN_HEIGHT * 2/3 )
+        pygame.display.flip()
+        self.wait_for_key()
+    
     def wait_for_key(self):
         waiting = True
         while waiting:
@@ -189,6 +201,8 @@ class Game:
                         waiting = False
                     if event.key == pygame.K_RETURN:
                         waiting = False
+                        if self.gameispaused:
+                            self.gameispaused = False
                     
     def draw_text(self, text, size, color, x, y):
         font = pygame.font.Font(self.font_name, size)
