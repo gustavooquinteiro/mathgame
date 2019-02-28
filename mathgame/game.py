@@ -132,7 +132,7 @@ class Game:
                         facing = -1
                     
                     if len(self.bullets) < 5:
-                        self.bullets.append(Projectile(round(self.player.rect.x + 10), round(self.player.rect.y +5 ), 6, BLACK, facing, self.player.power))
+                        self.bullets.append(Projectile(round(self.player.rect.x + 65), round(self.player.rect.y + 55 ), 6, BLACK, facing, self.player.power))
                 
                 if event.key == pygame.K_DOWN:
                     self.player.stop()
@@ -155,7 +155,7 @@ class Game:
         self.clock.tick(FPS)
         for enemies in self.current_level.enemies:
             enemies.draw(self.screen)
-            font = pygame.font.SysFont('arial', 20, True)
+            font = pygame.font.SysFont(FONT, 20, True)
             text = font.render("Força {}".format(enemies.power), 1, WHITE)
             self.screen.blit(text, (enemies.rect.x- 10, enemies.rect.y - 20))
         text = font.render("Health {}" .format(self.player.health), 1, WHITE)
