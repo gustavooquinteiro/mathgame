@@ -3,7 +3,7 @@ This module is used to hold the Player class. The Player represents the user-
 controlled sprite on the screen.
 """
 import pygame
- 
+import os
 from constants import *
 import levels
 from platforms import MovingPlatform
@@ -23,9 +23,9 @@ class Player(Character):
  
         # Call the parent's constructor
         super().__init__()
-        
+        relpath = os.path.relpath(os.path.join(SPRITE_FOLDER, PLAYER_PNG))
         self.health = 100
- 
+        sprite_sheet = SpriteSheet(relpath)
  
         # -- Attributes
         # Set speed vector of player
@@ -44,12 +44,9 @@ class Player(Character):
         self.level = None
         self.shoot = False
         self.power = 1
-        self.countspace = 0
-        self.countrepeatright = 0
-        self.countrepeatleft = 0
         self.iskill = False
  
-        sprite_sheet = SpriteSheet("spritesheet/p1_walk.png")
+        
         # Load all the right facing images into a list
         image = sprite_sheet.get_image(0, 0, 66, 90)
         self.walking_frames_r.append(image)

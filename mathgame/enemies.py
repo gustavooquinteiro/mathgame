@@ -5,7 +5,7 @@ from constants import*
 from character import Character
 
 class Enemy(Character):
-    def __init__(self, x, y, player):
+    def __init__(self, x, y, player, level, initial = -9):
         super().__init__()
         self.level = None
         self.change_x = random.randrange(-5, -1)
@@ -19,7 +19,7 @@ class Enemy(Character):
         self.player = player
         self.change_y = 0
         self.count = 0 
-        self.power = random.randint(-9, 9)
+        self.power = random.randint(initial, 9)
         if self.power > 0:
             self.image.fill(BLUE)
         elif self.power == 0:

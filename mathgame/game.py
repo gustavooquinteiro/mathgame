@@ -20,14 +20,12 @@ class Game:
         self.countspace = 0
         self.countrepeatleft = 0
         self.countrepeatright = 0
-        self.duration = 0
         self.gameispaused = False
         
     def new(self):
-        self.level_list = []
         self.player = Player()
-        #for i in range(4):
-        #   self.enemies.append(Enemy(800 + i, 400 - i, self.player))
+        self.player.health = 100
+        self.level_list = []
         self.bullets = []
         self.active_sprite_list = pygame.sprite.Group()
         self.level_list.append(levels.Level_01(self.player))
@@ -53,7 +51,7 @@ class Game:
             self.gameover()
             return
             
-        if not self.gameispaused:
+        if not self.gameispaused and self.running:
             self.active_sprite_list.update()
             self.current_level.update()
             # If the player gets near the right side, shift the world left (-x)
@@ -76,11 +74,13 @@ class Game:
                     self.level += 1
                     self.current_level = self.level_list[self.level]
                     self.player.level = self.current_level
+        else:
+            return
 
         
     def events(self):
         for bullet in self.bullets:
-            for enemies in self.current_level.enemies:
+            for enemies in self.current_level.enemy_list:
                 if bullet.y - bullet.radius < enemies.rect.y + 40 and bullet.y + bullet.radius > enemies.rect.y:
                     if bullet.x + bullet.radius > enemies.rect.x and bullet.x - bullet.radius < enemies.rect.x + 60:
                         enemies.loseenergy(self.player.power)
@@ -101,7 +101,7 @@ class Game:
                     self.pausescreen()
                 
                 if event.key == pygame.K_LEFT:
-                    self.countrepeatleft -= time.time() 
+                    self.countrepeatleft += 1 
                     if self.countrepeatleft > 1:
                         self.player.sprint("L")
                         self.countrepeatleft = 0
@@ -110,7 +110,7 @@ class Game:
                         self.player.go_left()
                         
                 if event.key == pygame.K_RIGHT:
-                    self.countrepeatright -= time.time()
+                    self.countrepeatright += 1
                     if self.countrepeatright > 1:
                         self.player.sprint("R")
                         self.countrepeatright = 0
@@ -126,14 +126,14 @@ class Game:
                     self.player.jump()
                     
                 if event.key == pygame.K_SPACE: 
-                    if self.player.direction is "R":
-                        facing = 1
-                    else:
-                        facing = -1
-                    
                     if len(self.bullets) < 5:
-                        self.bullets.append(Projectile(round(self.player.rect.x + 65), round(self.player.rect.y + 55 ), 6, BLACK, facing, self.player.power))
-                
+                        if self.player.direction is "R":
+                            facing = 1
+                            self.bullets.append(Projectile(round(self.player.rect.x + 65), round(self.player.rect.y + 55), 6, BLACK, facing, self.player.power))
+                        else:
+                            facing = -1
+                            self.bullets.append(Projectile(round(self.player.rect.x - 10), round(self.player.rect.y + 55), 6, BLACK, facing, self.player.power))
+                            
                 if event.key == pygame.K_DOWN:
                     self.player.stop()
                     
@@ -144,7 +144,6 @@ class Game:
                 if event.key == pygame.K_LEFT:
                     self.countrepeatleft = 0
                     self.player.stop()
-            self.duration += 1
 
     def draw(self):
         self.screen.fill(BLACK)
@@ -153,14 +152,16 @@ class Game:
         for bullet in self.bullets:
             bullet.draw(self.screen)
         self.clock.tick(FPS)
-        for enemies in self.current_level.enemies:
+        font = pygame.font.SysFont(FONT, 20, True)
+        for enemies in self.current_level.enemy_list:
             enemies.draw(self.screen)
-            font = pygame.font.SysFont(FONT, 20, True)
-            text = font.render("Força {}".format(enemies.power), 1, WHITE)
-            self.screen.blit(text, (enemies.rect.x- 10, enemies.rect.y - 20))
+            if enemies.power is not 0:
+                text = font.render("Lvl {}".format(enemies.power), 1, WHITE)
+                self.screen.blit(text, (enemies.rect.x- 10, enemies.rect.y - 20))
         text = font.render("Health {}" .format(self.player.health), 1, WHITE)
         self.screen.blit(text, (self.player.rect.x -10, self.player.rect.y -20))
-        
+        text = font.render("Press p to pause", 1, WHITE)
+        self.screen.blit(text, (SCREEN_WIDTH - 200, 10))
         pygame.display.flip()
         pygame.display.update()
 
@@ -196,8 +197,9 @@ class Game:
                     waiting = False
                     self.running = False
                 if event.type == pygame.KEYUP:
-                    if event.key == ord('q'):
+                    if event.key == pygame.K_q:
                         self.running = False
+                        self.playing = False
                         waiting = False
                     if event.key == pygame.K_RETURN:
                         waiting = False
