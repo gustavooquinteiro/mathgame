@@ -31,6 +31,7 @@ class Player(Character):
         # Set speed vector of player
         self.change_x = 0
         self.change_y = 0
+        self.invisible = False
  
         # This holds all the images for the animated walk left/right
         # of our player
@@ -95,8 +96,7 @@ class Player(Character):
     def update(self):
         """ Move the player. """
         # Gravity
-        self.calc_grav()
- 
+        self.calc_grav()        
         # Move left/right
         self.rect.x += self.change_x
         pos = self.rect.x + self.level.world_shift
@@ -173,7 +173,9 @@ class Player(Character):
             self.change_x = -24
         elif self.direction is "R":
             self.change_x = 24
-            
+    
+    def invisibility(self):
+        self.invisible = not self.invisible
     
     # Player-controlled movement:
     def go_left(self):
@@ -189,3 +191,4 @@ class Player(Character):
     def stop(self):
         """ Called when the user lets off the keyboard. """
         self.change_x = 0
+    

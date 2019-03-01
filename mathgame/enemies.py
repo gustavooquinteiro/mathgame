@@ -21,7 +21,7 @@ class Enemy(Character):
         self.change_y = 0
         self.count = 0 
         self.power = random.randint(initial, 9)
-        relpath = os.path.relpath(os.path.join(SPRITE_FOLDER, "enemies.png"))
+        relpath = os.path.relpath(os.path.join(SPRITE_FOLDER, ENEMIES_PNG))
         self.sprite_sheet = SpriteSheet(relpath)
         if self.power > 0:
             self.image = self.sprite_sheet.get_image(425,0,52,147)
@@ -33,7 +33,6 @@ class Enemy(Character):
     def update(self):
         self.destroy()
         self.rect.x += self.change_x
-           
     
     def draw(self, screen):
        self.update()
@@ -54,7 +53,7 @@ class Enemy(Character):
             self.change_x += random.randrange(1, 3)
         
     def destroy(self):
-        if self.power is not 0 and pygame.sprite.collide_rect(self, self.player) and self.count == 0:
+        if self.power is not 0 and pygame.sprite.collide_rect(self, self.player) and self.count == 0 and not self.player.invisible:
             self.count += 1
             self.player.hit(abs(self.power) * 10)      
 

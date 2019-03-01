@@ -24,5 +24,6 @@ FONT = "Arial"
 
 SPRITE_FOLDER = "spritesheet/"
 PLAYER_PNG = "p1_walk.png"
+ENEMIES_PNG = "enemies.png"
 BACKGROUND_01 = "spritesheet/background_01.png"
 BACKGROUND_02 = "spritesheet/background_02.png"

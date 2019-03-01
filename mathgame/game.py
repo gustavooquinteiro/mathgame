@@ -2,7 +2,6 @@ import pygame
  
 from constants import *
 import levels
-import time 
 from player import Player
 from enemies import Enemy
 from projectile import Projectile
@@ -20,6 +19,7 @@ class Game:
         self.countspace = 0
         self.countrepeatleft = 0
         self.countrepeatright = 0
+        self.countrepeatdown = 0
         self.gameispaused = False
         
     def new(self):
@@ -81,14 +81,16 @@ class Game:
     def events(self):
         for bullet in self.bullets:
             for enemies in self.current_level.enemy_list:
-                if bullet.y - bullet.radius < enemies.rect.y + 40 and bullet.y + bullet.radius > enemies.rect.y:
-                    if bullet.x + bullet.radius > enemies.rect.x and bullet.x - bullet.radius < enemies.rect.x + 60:
+                if bullet.y - bullet.radius < enemies.rect.y + 147 and bullet.y + bullet.radius > enemies.rect.y:
+                    if bullet.x + bullet.radius > enemies.rect.x and bullet.x - bullet.radius < enemies.rect.x + 52:
                         enemies.loseenergy(self.player.power)
-                        self.bullets.pop(self.bullets.index(bullet))
+                        if bullet in self.bullets:
+                            self.bullets.pop(self.bullets.index(bullet))
             if bullet.x < SCREEN_WIDTH and bullet.x > 0:
                 bullet.x += bullet.vel
             else:
-                self.bullets.pop(self.bullets.index(bullet))
+                if bullet in self.bullets:
+                    self.bullets.pop(self.bullets.index(bullet))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -102,24 +104,25 @@ class Game:
                 
                 if event.key == pygame.K_LEFT:
                     self.countrepeatleft += 1 
+                    # level condition
                     if self.countrepeatleft > 1:
                         self.player.sprint("L")
                         self.countrepeatleft = 0
                     else:
                         self.player.go_left()
-                        self.countrepeatleft = 0
                         
                 if event.key == pygame.K_RIGHT:
                     self.countrepeatright += 1
+                    # level condition
                     if self.countrepeatright > 1:
                         self.player.sprint("R")
                         self.countrepeatleft = 0
                     else:
                         self.player.go_right()
-                        self.countrepeatright = 0
                         
                 if event.key == pygame.K_UP:
                     self.countspace += 1
+                    # level condition
                     if self.countspace > 1:
                         self.player.doublejump()
                         self.countspace = 0
@@ -127,42 +130,46 @@ class Game:
                         self.player.jump()
                     
                 if event.key == pygame.K_SPACE: 
-                    if len(self.bullets) < 5:
-                        if self.player.direction is "R":
-                            facing = 1
-                            self.bullets.append(Projectile(round(self.player.rect.x + 65), round(self.player.rect.y + 55), 6, BLACK, facing, self.player.power))
-                        else:
-                            facing = -1
-                            self.bullets.append(Projectile(round(self.player.rect.x - 10), round(self.player.rect.y + 55), 6, BLACK, facing, self.player.power))
+                    # level condition
+                    if self.player.direction is "R":
+                        facing = 1
+                        self.bullets.append(Projectile(round(self.player.rect.x + 65), round(self.player.rect.y + 55), 6, BLACK, facing, self.player.power))
+                    else:
+                        facing = -1
+                        self.bullets.append(Projectile(round(self.player.rect.x - 10), round(self.player.rect.y + 55), 6, BLACK, facing, self.player.power))
                             
                 if event.key == pygame.K_DOWN:
                     self.player.stop()
-                    
+                    # level condition
+                    self.player.invisibility()
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_RIGHT:
-                    self.countrepeatright = 0
-                    self.player.stop()
-                if event.key == pygame.K_LEFT:
-                    self.countrepeatleft = 0
-                    self.player.stop()
+                self.player.stop()
+            
+                    
 
     def draw(self):
         self.screen.fill(BLACK)
         self.current_level.draw(self.screen)
-        self.active_sprite_list.draw(self.screen)
+        font = pygame.font.SysFont(FONT, 20, True)
+        
+        if not self.player.invisible:
+            self.active_sprite_list.draw(self.screen)
+            text = font.render("Health {}" .format(self.player.health), 1, WHITE)
+            self.screen.blit(text, (self.player.rect.x -10, self.player.rect.y -20))
+            text = font.render("Press p to pause", 1, WHITE)
+            self.screen.blit(text, (SCREEN_WIDTH - 200, 10))
+            
         for bullet in self.bullets:
             bullet.draw(self.screen)
+            
         self.clock.tick(FPS)
-        font = pygame.font.SysFont(FONT, 20, True)
+       
         for enemies in self.current_level.enemy_list:
             enemies.draw(self.screen)
             if enemies.power is not 0:
                 text = font.render("Lvl {}".format(enemies.power), 1, WHITE)
                 self.screen.blit(text, (enemies.rect.x- 10, enemies.rect.y - 20))
-        text = font.render("Health {}" .format(self.player.health), 1, WHITE)
-        self.screen.blit(text, (self.player.rect.x -10, self.player.rect.y -20))
-        text = font.render("Press p to pause", 1, WHITE)
-        self.screen.blit(text, (SCREEN_WIDTH - 200, 10))
+       
         pygame.display.flip()
         pygame.display.update()
 
