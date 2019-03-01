@@ -3,14 +3,15 @@ from spritesheet_functions import SpriteSheet
 import random 
 from constants import*
 from character import Character
+import os
 
 class Enemy(Character):
     def __init__(self, x, y, player, level, initial = -9):
         super().__init__()
         self.level = None
         self.change_x = random.randrange(-5, -1)
-        width = 40
-        height = 60
+        width = 52
+        height = 147
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -20,22 +21,24 @@ class Enemy(Character):
         self.change_y = 0
         self.count = 0 
         self.power = random.randint(initial, 9)
+        relpath = os.path.relpath(os.path.join(SPRITE_FOLDER, "enemies.png"))
+        self.sprite_sheet = SpriteSheet(relpath)
         if self.power > 0:
-            self.image.fill(BLUE)
+            self.image = self.sprite_sheet.get_image(425,0,52,147)
         elif self.power == 0:
             self.image.fill(WHITE)
         else:
-            self.image.fill(RED)
+            self.image = self.sprite_sheet.get_image(477, 0, 52, 147)
         
     def update(self):
         self.destroy()
         self.rect.x += self.change_x
-        if self.power is 0 and self.rect.right < SCREEN_WIDTH or self.rect.bottom < SCREEN_HEIGHT:
-            self.kill()     
+           
     
     def draw(self, screen):
        self.update()
-       screen.blit(self.image, (self.rect.x, self.rect.y))
+       if self.power is not 0:
+           screen.blit(self.image, (self.rect.x, self.rect.y))
    
     def loseenergy(self, power):
         self.power -= power
@@ -44,7 +47,7 @@ class Enemy(Character):
             self.change_x = 0
             
         if self.power < 0:
-            self.image.fill(RED)    
+            self.image = self.sprite_sheet.get_image(477, 0, 52, 147)
             self.change_x += random.randrange(-5, -1)
             
         if self.power > 0:

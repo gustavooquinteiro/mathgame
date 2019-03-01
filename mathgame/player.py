@@ -46,7 +46,6 @@ class Player(Character):
         self.power = 1
         self.iskill = False
  
-        
         # Load all the right facing images into a list
         image = sprite_sheet.get_image(0, 0, 66, 90)
         self.walking_frames_r.append(image)
@@ -161,7 +160,7 @@ class Player(Character):
             
     def hit(self, damage):
         self.health -= damage
-        if self.health < 0:
+        if self.health <= 0:
             self.iskill = True
             
     def increasepower(self, multiplier=1):

@@ -105,25 +105,26 @@ class Game:
                     if self.countrepeatleft > 1:
                         self.player.sprint("L")
                         self.countrepeatleft = 0
-                        self.countrepeatright = 0
                     else:
                         self.player.go_left()
+                        self.countrepeatleft = 0
                         
                 if event.key == pygame.K_RIGHT:
                     self.countrepeatright += 1
                     if self.countrepeatright > 1:
                         self.player.sprint("R")
-                        self.countrepeatright = 0
                         self.countrepeatleft = 0
                     else:
                         self.player.go_right()
+                        self.countrepeatright = 0
                         
                 if event.key == pygame.K_UP:
                     self.countspace += 1
                     if self.countspace > 1:
                         self.player.doublejump()
                         self.countspace = 0
-                    self.player.jump()
+                    else:
+                        self.player.jump()
                     
                 if event.key == pygame.K_SPACE: 
                     if len(self.bullets) < 5:

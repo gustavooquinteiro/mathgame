@@ -60,7 +60,7 @@ class Level():
     
     def spawn(self, interval = 5):
         for i in range(interval):
-            self.enemy_list.append(Enemy(random.randint(round(SCREEN_WIDTH/3), SCREEN_WIDTH), random.randrange(round(SCREEN_HEIGHT / 4), SCREEN_HEIGHT), self.player, self,1))
+            self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), self.player, self,1))
             
  
 # Create platforms for the level
@@ -129,7 +129,7 @@ class Level_02(Level):
         self.level_limit = -1000
  
         # Array with type of platform, and x, y location of the platform.
-        level = [ [platforms.STONE_PLATFORM_LEFT, 500, 550],
+        self.level = [ [platforms.STONE_PLATFORM_LEFT, 500, 550],
                   [platforms.STONE_PLATFORM_MIDDLE, 570, 550],
                   [platforms.STONE_PLATFORM_RIGHT, 640, 550],
                   [platforms.GRASS_LEFT, 800, 400],
@@ -145,7 +145,7 @@ class Level_02(Level):
  
  
         # Go through the array above and add platforms
-        for platform in level:
+        for platform in self.level:
             block = platforms.Platform(platform[0])
             block.rect.x = platform[1]
             block.rect.y = platform[2]
@@ -172,6 +172,4 @@ class Level_03(Level):
         self.level_limit = -5000
         self.spawn(4)
         
-        
-    
         
