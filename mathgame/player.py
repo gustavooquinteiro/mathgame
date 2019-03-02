@@ -136,7 +136,7 @@ class Player(Character):
  
             if isinstance(block, MovingPlatform):
                 self.rect.x += block.change_x
-        if self.rect.bottom == SCREEN_HEIGHT:
+        if self.rect.bottom == SCREEN_HEIGHT and not isinstance(self.level, Level_08):
             self.kill()
             self.iskill = True
  
@@ -173,6 +173,9 @@ class Player(Character):
             self.change_x = -24
         elif self.direction is "R":
             self.change_x = 24
+            
+    def heal(self):
+        self.health = min(self.health + 10, 100)
     
     def invisibility(self):
         self.invisible = not self.invisible
