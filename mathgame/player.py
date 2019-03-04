@@ -5,7 +5,7 @@ controlled sprite on the screen.
 import pygame
 import os
 from constants import *
-import levels
+from levels import *
 from platforms import MovingPlatform
 from spritesheet_functions import SpriteSheet
 from character import Character
@@ -136,10 +136,15 @@ class Player(Character):
  
             if isinstance(block, MovingPlatform):
                 self.rect.x += block.change_x
-        if self.rect.bottom == SCREEN_HEIGHT and not isinstance(self.level, Level_08):
+        if self.rect.bottom == SCREEN_HEIGHT and not self.avoidthevoid():
             self.kill()
             self.iskill = True
  
+    def avoidthevoid(self):
+        if isinstance(self.level, Level_08) or isinstance(self.level, Level_09) or isinstance(self.level, Level_10):
+            return True
+        return False
+        
     def jump(self):
         """ Called when user hits 'jump' button. """
  

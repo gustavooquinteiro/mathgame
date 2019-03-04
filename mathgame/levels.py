@@ -3,7 +3,8 @@ from constants import *
 import platforms
 from enemies import Enemy
 import random
- 
+
+# parent class 
 class Level():
     """ This is a generic super-class used to define a level.
         Create a child class for each level with level-specific
@@ -57,13 +58,15 @@ class Level():
  
         for enemy in self.enemy_list:
             enemy.rect.x += shift_x    
+        
+        
     
     def spawn(self, interval = 5):
         for i in range(interval):
-            self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), self.player, self,1))
+            self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), self.player, self,random.randrange(-9, 1)))
             
  
-# Create platforms for the level
+# level 1 = just walk around
 class Level_01(Level):
     """ Definition for level 1. """
  
@@ -110,7 +113,7 @@ class Level_01(Level):
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
         
 
-# Create platforms for the level
+# level 2 - sprint
 class Level_02(Level):
     """ Definition for level 2. """
  
@@ -156,6 +159,7 @@ class Level_02(Level):
         text = font.render(TIP_LVL2, 1, WHITE)
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
+#level 3 - jump
 class Level_03(Level):
     def __init__(self, player):
         super().__init__(player)
@@ -179,10 +183,10 @@ class Level_03(Level):
             
         for i in range(1,3):
             block = platforms.MovingPlatform(platforms.STONE_PLATFORM_MIDDLE)
-            block.rect.x = 1100+70*i
-            block.rect.y = 70*i
-            block.boundary_top = 200 + 70*i
-            block.boundary_bottom = 700 + 70*i
+            block.rect.x = 1100 + 100*i
+            block.rect.y = 300 + 100*i
+            block.boundary_top = 100 + 70*i
+            block.boundary_bottom = 500 + 70*i
             block.change_y = -1
             block.player = self.player
             block.level = self
@@ -192,22 +196,68 @@ class Level_03(Level):
         font = pygame.font.SysFont(FONT, 20)
         text = font.render(TIP_LVL3, 1, WHITE)
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
-        
+
+#level 4 - shoot        
 class Level_04(Level):
     def __init__(self, player):
         super().__init__(player)
         self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.level = [ [platforms.GRASS_LEFT, 0, 500]]
+        for i in range(1, 50):
+            self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
+        self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
+        
+        self.level.append([platforms.GRASS_MIDDLE, 100, 200])
+        for i in range(1, 3):
+            self.level.append([platforms.GRASS_MIDDLE, 100+70*i, 200-50*i])
+            
+        for platform in self.level:
+            block = platforms.Platform(platform[0])
+            block.rect.x = platform[1]
+            block.rect.y = platform[2]
+            block.player = self.player
+            self.platform_list.add(block)
+            
         self.spawn()
+
         
     def tip(self, screen):
         font = pygame.font.SysFont(FONT, 20)
         text = font.render(TIP_LVL4, 1, WHITE)
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
-        
+
+#level 5 - double jump        
 class Level_05(Level):
     def __init__(self, player):
         super().__init__(player)
         self.background = pygame.image.load(BACKGROUND_01).convert()
+        
+        self.level = [ [platforms.GRASS_LEFT, 0, 500]]
+        for i in range(1, 5):
+            self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
+        self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
+        
+        self.level.append([platforms.GRASS_LEFT, 100, 280])
+        for i in range(1, 5):
+            self.level.append([platforms.GRASS_MIDDLE, 140+70*i, 280-50*i])
+            
+        for platform in self.level:
+            block = platforms.Platform(platform[0])
+            block.rect.x = platform[1]
+            block.rect.y = platform[2]
+            block.player = self.player
+            self.platform_list.add(block)
+        
+        block = platforms.MovingPlatform(platforms.STONE_PLATFORM_MIDDLE)
+        block.rect.x = 110
+        block.rect.y = 60
+        block.boundary_top = 290
+        block.boundary_bottom = 500
+        block.change_y = -1
+        block.player = self.player
+        block.level = self
+        self.platform_list.add(block)
+        
         self.spawn()
         
     def tip(self, screen):
@@ -215,11 +265,25 @@ class Level_05(Level):
         text = font.render(TIP_LVL5, 1, WHITE)
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
+#level 6 - invisibility
 class Level_06(Level):
     def __init__(self, player):
         super().__init__(player)
         self.background = pygame.image.load(BACKGROUND_01).convert()
-        self.spawn()
+        
+        self.level = [ [platforms.GRASS_LEFT, 0, 500]]
+        for i in range(1, 30):
+            self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
+        self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
+        
+        for platform in self.level:
+            block = platforms.Platform(platform[0])
+            block.rect.x = platform[1]
+            block.rect.y = platform[2]
+            block.player = self.player
+            self.platform_list.add(block)
+        
+        self.spawn(10)
         
     def tip(self, screen):
         font = pygame.font.SysFont(FONT, 20)
@@ -227,3 +291,65 @@ class Level_06(Level):
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
         
     
+#level 7 - increase power
+class Level_07(Level):
+    def __init__(self, player):
+        super().__init__(player)
+        self.background = pygame.image.load(BACKGROUND_01).convert()
+        
+        self.level = [ [platforms.GRASS_LEFT, 0, 500]]
+        for i in range(1, 30):
+            self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
+        self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
+        
+        for platform in self.level:
+            block = platforms.Platform(platform[0])
+            block.rect.x = platform[1]
+            block.rect.y = platform[2]
+            block.player = self.player
+            self.platform_list.add(block)
+            
+        self.spawn()
+        
+    def tip(self, screen):
+        font = pygame.font.SysFont(FONT, 20)
+        text = font.render(TIP_LVL7, 1, WHITE)
+        screen.blit(text, (SCREEN_WIDTH - 780, 10))
+
+
+#level 8 - dont fall
+class Level_08(Level):
+    def __init__(self, player):
+        super().__init__(player)
+        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.spawn(10)
+        
+    def tip(self, screen):
+        font = pygame.font.SysFont(FONT, 20)
+        text = font.render(TIP_LVL8, 1, WHITE)
+        screen.blit(text, (SCREEN_WIDTH - 780, 10))
+
+
+#level 9 - twice power
+class Level_09(Level):
+    def __init__(self, player):
+        super().__init__(player)
+        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.spawn(10)
+        
+    def tip(self, screen):
+        font = pygame.font.SysFont(FONT, 20)
+        text = font.render(TIP_LVL9, 1, WHITE)
+        screen.blit(text, (SCREEN_WIDTH - 780, 10))
+
+#level 10 - heal
+class Level_10(Level):
+    def __init__(self, player):
+        super().__init__(player)
+        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.spawn(15)
+        
+    def tip(self, screen):
+        font = pygame.font.SysFont(FONT, 20)
+        text = font.render(TIP_LVL10, 1, WHITE)
+        screen.blit(text, (SCREEN_WIDTH - 780, 10))
