@@ -62,8 +62,12 @@ class Level():
         
     
     def spawn(self, interval = 5):
-        for i in range(interval):
-            self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), self.player, self,random.randrange(-9, 1)))
+        if isinstance(self, Level_08) or isinstance(self, Level_09) or isinstance(self, Level_10):
+            for i in range(interval):
+                self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(50,SCREEN_HEIGHT), self.player, self,random.randrange(-9, 1)))
+        else:
+            for i in range(interval):
+                self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), self.player, self,random.randrange(-9, 1)))
             
  
 # level 1 = just walk around
@@ -163,7 +167,7 @@ class Level_02(Level):
 class Level_03(Level):
     def __init__(self, player):
         super().__init__(player)
-        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.background = pygame.image.load(BACKGROUND_03).convert()
         self.background.set_colorkey(WHITE)
         self.level_limit = -1000
         
@@ -173,6 +177,9 @@ class Level_03(Level):
         self.level.append([platforms.GRASS_RIGHT, 350, 500])
         for i in range(1, 10):
             self.level.append([platforms.GRASS_MIDDLE, 350+70*i, 500-50*i])
+            
+        for i in range(1, 10):
+            self.level.append([platforms.GRASS_MIDDLE, 1500+70*i, 500-50*i])
             
         for platform in self.level:
             block = platforms.Platform(platform[0])
@@ -201,7 +208,7 @@ class Level_03(Level):
 class Level_04(Level):
     def __init__(self, player):
         super().__init__(player)
-        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.background = pygame.image.load(BACKGROUND_04).convert()
         self.level = [ [platforms.GRASS_LEFT, 0, 500]]
         for i in range(1, 50):
             self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
@@ -230,16 +237,15 @@ class Level_04(Level):
 class Level_05(Level):
     def __init__(self, player):
         super().__init__(player)
-        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.background = pygame.image.load(BACKGROUND_05).convert()
         
         self.level = [ [platforms.GRASS_LEFT, 0, 500]]
-        for i in range(1, 5):
+        for i in range(1, 20):
             self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
         self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
         
-        self.level.append([platforms.GRASS_LEFT, 100, 280])
         for i in range(1, 5):
-            self.level.append([platforms.GRASS_MIDDLE, 140+70*i, 280-50*i])
+            self.level.append([platforms.STONE_PLATFORM_MIDDLE, 240+70*i, 580-100*i])
             
         for platform in self.level:
             block = platforms.Platform(platform[0])
@@ -249,7 +255,7 @@ class Level_05(Level):
             self.platform_list.add(block)
         
         block = platforms.MovingPlatform(platforms.STONE_PLATFORM_MIDDLE)
-        block.rect.x = 110
+        block.rect.x = 1000
         block.rect.y = 60
         block.boundary_top = 290
         block.boundary_bottom = 500
@@ -269,7 +275,7 @@ class Level_05(Level):
 class Level_06(Level):
     def __init__(self, player):
         super().__init__(player)
-        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.background = pygame.image.load(BACKGROUND_06).convert()
         
         self.level = [ [platforms.GRASS_LEFT, 0, 500]]
         for i in range(1, 30):
@@ -295,7 +301,7 @@ class Level_06(Level):
 class Level_07(Level):
     def __init__(self, player):
         super().__init__(player)
-        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.background = pygame.image.load(BACKGROUND_07).convert()
         
         self.level = [ [platforms.GRASS_LEFT, 0, 500]]
         for i in range(1, 30):
@@ -321,7 +327,9 @@ class Level_07(Level):
 class Level_08(Level):
     def __init__(self, player):
         super().__init__(player)
-        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.background = pygame.image.load(BACKGROUND_08).convert()
+        for i in range(1, 30):
+            self.level.append([platforms.STONE_PLATFORM_MIDDLE, random.randrange(i, 1700), random.randrange(i, 1000)])
         self.spawn(10)
         
     def tip(self, screen):
@@ -334,7 +342,7 @@ class Level_08(Level):
 class Level_09(Level):
     def __init__(self, player):
         super().__init__(player)
-        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.background = pygame.image.load(BACKGROUND_09).convert()
         self.spawn(10)
         
     def tip(self, screen):
@@ -346,7 +354,7 @@ class Level_09(Level):
 class Level_10(Level):
     def __init__(self, player):
         super().__init__(player)
-        self.background = pygame.image.load(BACKGROUND_01).convert()
+        self.background = pygame.image.load(BACKGROUND_10).convert()
         self.spawn(15)
         
     def tip(self, screen):
