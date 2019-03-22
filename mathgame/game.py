@@ -1,10 +1,26 @@
 import pygame
-
 from constants import *
 import levels
 from player import Player
 from enemies import Enemy
 from projectile import Projectile
+import platform
+import gettext
+if platform.system() is 'Windows':
+    import locale
+    import ctypes
+    windll = ctypes.windll.kernel32
+    language = locale.windows_locale[windll.GetUserDefaultUILanguage()]
+else:
+    language = os.environ.get('LANGUAGE')
+try:
+    translation = gettext.translation('game', localedir='locale', languages=[language])
+except Exception as e:
+    # Send the exception for email
+    translation = gettext.translation('game', localedir='locale', languages=['pt_BR'])
+finally:
+    translation.install()
+
 
 class Game:
     def __init__(self):
@@ -116,8 +132,8 @@ class Game:
 
                 if event.key == pygame.K_UP:
                     if self.level < 2:
-                        self.draw_text("The gravity here is too high to jump", 24, RED, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-                        self.draw_text("Press Enter to continue", 22, RED, SCREEN_WIDTH/2, SCREEN_HEIGHT/4)
+                        self.draw_text(_('The gravity here is too high to jump'), 24, RED, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+                        self.draw_text(_('Press Enter to continue'), 22, RED, SCREEN_WIDTH/2, SCREEN_HEIGHT/4)
                         pygame.display.flip()
                         self.wait_for_key()
                     else:
@@ -143,9 +159,9 @@ class Game:
 
         if not self.player.invisible:
             self.active_sprite_list.draw(self.screen)
-            text = font.render("Health {}" .format(self.player.health), 1, RED)
+            text = font.render(_('Health {}%') .format(self.player.health), 1, RED)
             self.screen.blit(text, (self.player.rect.x -10, self.player.rect.y -20))
-            text = font.render("Press me", 1, WHITE)
+            text = font.render(_('Press me'), 1, WHITE)
             self.screen.blit(text, (SCREEN_WIDTH - 200, 10))
 
         for bullet in self.player.bullets:
@@ -156,7 +172,7 @@ class Game:
         for enemies in self.current_level.enemy_list:
             enemies.draw(self.screen)
             if enemies.power is not 0:
-                text = font.render("Lvl {}".format(enemies.power), 1, WHITE)
+                text = font.render(_('Level {}').format(enemies.power), 1, WHITE)
                 self.screen.blit(text, (enemies.rect.x- 10, enemies.rect.y - 20))
 
         pygame.display.flip()
@@ -165,8 +181,8 @@ class Game:
 
     def show_start_screen(self):
         self.screen.fill(WHITE)
-        self.draw_text("Math Game", 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
-        self.draw_text("Press enter to play", 32, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        self.draw_text(_("Math Game"), 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
+        self.draw_text(_("Press enter to play"), 32, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         self.draw_text(TIP_LVL, 12, BLACK, SCREEN_WIDTH / 6, SCREEN_HEIGHT-15)
         pygame.display.flip()
         self.wait_for_key()
@@ -174,15 +190,15 @@ class Game:
     def gameover(self):
         self.screen.fill(WHITE)
         self.draw_text("Game Over", 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
-        self.draw_text("Press q to quit or enter to play again", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
+        self.draw_text(_("Press q to quit or enter to play again"), 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
         pygame.display.flip()
         self.wait_for_key()
 
     def pausescreen(self):
         self.current_level.tip(self.screen)
-        self.draw_text("Game Paused", 22, WHITE, SCREEN_WIDTH /2, SCREEN_HEIGHT/4)
-        self.draw_text("Press q to quit", 22, WHITE,SCREEN_WIDTH /2, SCREEN_HEIGHT * 1/2 )
-        self.draw_text("Press Enter to continue", 20, WHITE, SCREEN_WIDTH /2, SCREEN_HEIGHT * 2/3 )
+        self.draw_text(_("Game Paused"), 22, WHITE, SCREEN_WIDTH /2, SCREEN_HEIGHT/4)
+        self.draw_text(_("Press q to quit"), 22, WHITE,SCREEN_WIDTH /2, SCREEN_HEIGHT * 1/2 )
+        self.draw_text(_("Press Enter to continue"), 20, WHITE, SCREEN_WIDTH /2, SCREEN_HEIGHT * 2/3 )
         pygame.display.flip()
         self.wait_for_key()
 
@@ -210,8 +226,8 @@ class Game:
     def endscreen(self):
         self.screen.fill(WHITE)
         self.isover = True
-        self.draw_text("You Won!!", 40, BLACK, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-        self.draw_text("Press q to quit or enter to play again", 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
+        self.draw_text(_("You Won!!"), 40, BLACK, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        self.draw_text(_("Press q to quit or enter to play again"), 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
         pygame.display.flip()
         self.wait_for_key()
 
