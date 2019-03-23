@@ -19,15 +19,15 @@ With simple enemies mechanics and jump skill this is a short game to entertain
   3. Look for the right version, use the command `python --version` in your Terminal or Command Prompt to verify.
   + If your version is lower than required one, see [pyenv project](https://github.com/pyenv/pyenv) if keep the lower version is needed, otherwise upgrade them.  
 
-  4. For UNIX platforms, after downloaded and installed Python, install the libraries required with the following commands in Terminal on the project folder:
+  4. For UNIX platforms, install the libraries required with the following commands in Terminal on the project folder:
 
-    ```bash  
+    ```bash
     python3 -m venv env  
     source env/bin/activate  
     pip install -r requirements.txt  
     ```
-  5. For Windows, install libraries with the following commands in Command Prompt on the project folder:
-  ```
+  5. For Windows, after downloaded and installed Python, install libraries with the following commands in Command Prompt on the project folder:
+  ```bash
   pip install -r requirements.txt
   ```    
 ## How to use

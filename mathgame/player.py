@@ -10,7 +10,6 @@ from platforms import MovingPlatform
 from spritesheet_functions import SpriteSheet
 from character import Character
 from projectile import Projectile
-from exceptions import InsufficientLevel
 
 class Player(Character):
     """ This class represents the bar at the bottom that the player

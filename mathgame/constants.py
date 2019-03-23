@@ -1,16 +1,4 @@
-import platform
-import gettext
-if platform.system() is 'Windows':
-    language = 'pt_BR'
-else:
-    language = os.environ.get('LANGUAGE')
-try:
-    translation = gettext.translation('constants', localedir='locale', languages=[language])
-except Exception as e:
-    # Send the exception for email
-    translation = gettext.translation('constants', localedir='locale', languages=['pt_BR'])
-finally:
-    translation.install()
+import translator
 
 """
 Global constants
@@ -31,7 +19,7 @@ SCREEN_HEIGHT = 600
 FPS = 60
 
 # Title
-TITLE = "Math Game"
+TITLE = _("Math Game")
 
 #Font
 FONT = "Arial"
@@ -61,3 +49,13 @@ TIP_LVL7 = _("As long you go down more power you get")
 TIP_LVL8 = _("Don't need avoid the void anymore")
 TIP_LVL9 = _("But you give twice what you have")
 TIP_LVL10 = _("As long you stay more you can heal")
+
+HEALTH = _("Health {}%")
+PRESS_ME = _("Press me")
+LEVEL = _("Level {}")
+START = _("Press enter to play")
+GAME_OVER = _("Game Over")
+OPTIONS = _("Press q to quit or enter to play again")
+GAME_PAUSED = _("Game Paused")
+GAME_WIN = _("You Won!!")
+GRAVITY_WARN = _('The gravity here is too high to jump')

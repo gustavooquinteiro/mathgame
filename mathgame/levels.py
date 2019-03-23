@@ -1,6 +1,6 @@
 import pygame
-from constants import *
 import platforms
+from constants import *
 from enemies import Enemy
 import random
 
