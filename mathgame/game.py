@@ -4,11 +4,13 @@ from constants import *
 from player import Player
 from enemies import Enemy
 from projectile import Projectile
+from sounds import Sound
 
 class Game:
     def __init__(self):
         pygame.init()
-        pygame.key.set_repeat(1, 500)
+        self.background_sound = Sound()
+        pygame.key.set_repeat(50, 50)
         size = [SCREEN_WIDTH, SCREEN_HEIGHT]
         self.screen = pygame.display.set_mode(size)
         pygame.display.set_caption(TITLE)
@@ -17,26 +19,28 @@ class Game:
         self.running = True
         self.isover = False
         self.gameispaused = False
-        self.player = Player()
-        self.level_list = [levels.Level_01(self.player),
-                           levels.Level_02(self.player),
-                           levels.Level_03(self.player),
-                           levels.Level_04(self.player),
-                           levels.Level_05(self.player),
-                           levels.Level_06(self.player),
-                           levels.Level_07(self.player),
-                           levels.Level_08(self.player),
-                           levels.Level_09(self.player),
-                           levels.Level_10(self.player)]
         self.show_start_screen()
 
 
     def new(self, level = 0):
+        self.player = Player()
+        self.level_list = [levels.Level_01(self.player),
+                           levels.Level_02(self.player),
+                           levels.Level_03(self.player),
+                           levels.Level_04(self.player)
+                         #  levels.Level_05(self.player),
+                         #  levels.Level_06(self.player),
+                         #  levels.Level_07(self.player),
+                         #  levels.Level_08(self.player),
+                         #  levels.Level_09(self.player),
+                         #  levels.Level_10(self.player)
+                         ]
         self.active_sprite_list = pygame.sprite.Group()
         self.active_sprite_list.add(self.player)
         self.level = level
         self.current_level = self.level_list[self.level]
         self.player.level = self.current_level
+        self.background_sound.next_song()
         self.run()
 
     def run(self):
@@ -99,6 +103,8 @@ class Game:
                     self.player.bullets.pop(self.player.bullets.index(bullet))
 
         for event in pygame.event.get():
+            if event.type == pygame.USEREVENT:
+                self.background_sound.next_song()
             if event.type == pygame.QUIT:
                 if self.playing:
                     self.playing = False
@@ -109,12 +115,15 @@ class Game:
                     self.pausescreen()
 
                 if event.key == pygame.K_LEFT:
+                    self.player.sprint(self.player.direction)
                     self.player.go_left()
 
                 if event.key == pygame.K_RIGHT:
+                    self.player.sprint(self.player.direction)
                     self.player.go_right()
 
                 if event.key == pygame.K_UP:
+                    self.last_key_pressed = pygame.K_UP
                     if self.level < 2:
                         self.draw_text(GRAVITY_WARN, 24, RED, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
                         self.draw_text(OPTIONS, 22, RED, SCREEN_WIDTH/2, SCREEN_HEIGHT * 3/4)
@@ -132,7 +141,6 @@ class Game:
 
             if event.type == pygame.KEYUP:
                 self.player.stop()
-                self.player.heal()
 
 
 
@@ -172,6 +180,7 @@ class Game:
         self.wait_for_key()
 
     def gameover(self):
+        self.background_sound.stop_music()
         self.screen.fill(WHITE)
         self.draw_text(GAME_OVER, 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
         self.draw_text(OPTIONS, 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)

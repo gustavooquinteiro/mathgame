@@ -175,15 +175,15 @@ class Player(Character):
             # If it is ok to jump, set our speed upwards
             if len(platform_hit_list) > 0 or self.rect.bottom > SCREEN_HEIGHT:
                 self.change_y = -10
-        if isinstance(self.level, Level_05):
-            self.countspace += 1
-            if self.countspace > 1:
-                self.doublejump()
-                self.countspace = 0
+            self.doublejump()
 
 
     def doublejump(self):
-        self.change_y = -20
+        if isinstance(self.level, Level_05):
+            self.countspace += 1
+            if self.countspace > 1:
+                self.change_y = -20
+                self.countspace = 0
 
     def hit(self, damage):
         self.health -= damage
@@ -237,3 +237,5 @@ class Player(Character):
     def stop(self):
         """ Called when the user lets off the keyboard. """
         self.change_x = 0
+        self.change_y = 0
+        self.heal()
