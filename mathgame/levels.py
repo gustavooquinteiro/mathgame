@@ -10,13 +10,14 @@ class Level():
         Create a child class for each level with level-specific
         info. """
 
-    def __init__(self, player):
+    def __init__(self, player, gravity=.35):
         """ Constructor. Pass in a handle to player. Needed for when moving platforms
             collide with the player. """
 
         # Lists of sprites used in all levels. Add or remove
         # lists as needed for your game.
         self.platform_list = None
+        self.gravity = gravity
 
         # Background image
         self.background = None
@@ -64,21 +65,21 @@ class Level():
     def spawn(self, interval = 5):
         if isinstance(self, Level_08) or isinstance(self, Level_09) or isinstance(self, Level_10):
             for i in range(interval):
-                self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(50,SCREEN_HEIGHT), self.player, self,random.randrange(-9, 1)))
+                self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(50,SCREEN_HEIGHT), self.player, self, random.randrange(-9, 1)))
         else:
             for i in range(interval):
-                self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), self.player, self,random.randrange(-9, 1)))
+                self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), self.player, self, random.randrange(-9, 1)))
 
 
 # level 1 = just walk around
 class Level_01(Level):
     """ Definition for level 1. """
 
-    def __init__(self, player):
+    def __init__(self, player, gravity=.35):
         """ Create level 1. """
 
         # Call the parent constructor
-        super().__init__(player)
+        super().__init__(player, gravity)
         self.createLevel()
 
     def createLevel(self):
@@ -123,11 +124,11 @@ class Level_01(Level):
 class Level_02(Level_01):
     """ Definition for level 2. """
 
-    def __init__(self, player):
+    def __init__(self, player, gravity=.35):
         """ Create level 1. """
 
         # Call the parent constructor
-        super().__init__(player)
+        super().__init__(player, gravity)
         self.createLevel()
 
     def createLevel(self):
@@ -169,8 +170,8 @@ class Level_02(Level_01):
 
 #level 3 - jump
 class Level_03(Level_02):
-    def __init__(self, player):
-        super().__init__(player)
+    def __init__(self, player, gravity=-.2):
+        super().__init__(player, gravity)
         self.createLevel()
 
     def createLevel(self):
