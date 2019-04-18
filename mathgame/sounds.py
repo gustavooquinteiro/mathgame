@@ -32,7 +32,7 @@ class Sound():
         else:
             self.fadeout(3)
             self.playlist = self.playlist[1:]+ [self.playlist[0]]
-            pygame.mixer.music.queue(self.playlist.pop())
+            pygame.mixer.music.load(self.playlist[0])
             self.play_music()
 
     def play_music(self):
@@ -40,7 +40,7 @@ class Sound():
         pygame.mixer.music.play()
 
     def stop_music(self):
-        self.fadeout(1)
+        self.fadeout(2)
         pygame.mixer.music.stop()
 
     def fadeout(self, tempo):
@@ -48,5 +48,6 @@ class Sound():
         while tempo > 0:
             time.sleep(tempo)
             tempo -= 1
-            volume -= .1618
+            if volume > 0:
+                volume -= .314
             pygame.mixer.music.set_volume(volume)
