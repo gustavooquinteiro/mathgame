@@ -27,13 +27,13 @@ class Game:
         self.level_list = [levels.Level_01(self.player),
                            levels.Level_02(self.player),
                            levels.Level_03(self.player),
-                           levels.Level_04(self.player)
-                         #  levels.Level_05(self.player),
-                         #  levels.Level_06(self.player),
-                         #  levels.Level_07(self.player),
-                         #  levels.Level_08(self.player),
-                         #  levels.Level_09(self.player),
-                         #  levels.Level_10(self.player)
+                           levels.Level_04(self.player),
+                           levels.Level_05(self.player),
+                           levels.Level_06(self.player),
+                           levels.Level_07(self.player),
+                           levels.Level_08(self.player),
+                           levels.Level_09(self.player),
+                           levels.Level_10(self.player)
                          ]
         self.active_sprite_list = pygame.sprite.Group()
         self.active_sprite_list.add(self.player)
