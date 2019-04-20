@@ -1,5 +1,8 @@
 from game import Game
-
-g = Game()
-while g.running:
-    g.new()
+def main():
+    g = Game()
+    while g.running:
+        g.new()
+        
+if __name__ == "__main__":
+    main()
