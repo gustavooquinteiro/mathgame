@@ -1,0 +1,3 @@
+@ ECHO Starting the game...
+@ cd mathgame && python __init__.py
+EXIT

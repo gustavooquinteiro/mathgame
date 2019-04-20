@@ -1,36 +1,3 @@
-
-OSFLAG 				:=
-ifeq ($(OS),Windows_NT)
-
-BASE_FOLDER = mathgame
-
-GREEN=\033[0;32m
-NC=\033[0m
-
-all: requirements play
-
-requirements:
-	@ echo "Initializing virtual enviroment..."
-	@ python -m venv env   
-	@ echo -e -n " [${GREEN} OK ${NC}]"
-	@ echo " Initialized virtual enviroment"
-
-	@ echo "Activating virtual enviroment.."
-	@ \Scripts\activate.bat
-	@ echo -e -n " [${GREEN} OK ${NC}]"
-	@ echo " Activated virtual enviroment" 
-	
-	@ echo "Installing requirements..."
-	@ pip install -r requirements.txt
-	@ echo -e -n " [${GREEN} OK ${NC}]"
-	@ echo " Installed requirements"
-
-play:
-	@ echo "Playing the game..."
-	@ cd mathgame && python __init__.py
-
-else
-
 BASE_FOLDER = mathgame
 
 GREEN=\033[0;32m
