@@ -1,4 +1,4 @@
-IF EXIST "env" (
+IF NOT EXIST "env" (
 @ ECHO Initializing virtual enviroment...
 @ python -m venv env   
 @ ECHO Initialized virtual enviroment
