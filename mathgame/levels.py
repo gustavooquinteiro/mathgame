@@ -65,10 +65,24 @@ class Level():
     def spawn(self, interval = 5):
         if isinstance(self, Level_08) or isinstance(self, Level_09) or isinstance(self, Level_10):
             for i in range(interval):
-                self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(50,SCREEN_HEIGHT), self.player, self, random.randrange(-9, 1)))
+                self.enemy_list.append(
+                    Enemy(SCREEN_WIDTH,
+                          random.randrange(50,SCREEN_HEIGHT),
+                          self.player, 
+                          self, 
+                          random.randrange(-9, 9))
+                    )
         else:
             for i in range(interval):
-                self.enemy_list.append(Enemy(SCREEN_WIDTH, random.randrange(round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), self.player, self, random.randrange(-9, 1)))
+                self.enemy_list.append(
+                    Enemy(SCREEN_WIDTH, 
+                          random.randrange(
+                              round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)
+                              ), 
+                          self.player, 
+                          self, 
+                          random.randrange(-5, 1))
+                    )
 
 
 # level 1 = just walk around
@@ -121,7 +135,7 @@ class Level_01(Level):
 
 
 # level 2 - sprint
-class Level_02(Level_01):
+class Level_02(Level):
     """ Definition for level 2. """
 
     def __init__(self, player, gravity=.35):
@@ -169,7 +183,7 @@ class Level_02(Level_01):
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
 #level 3 - jump
-class Level_03(Level_02):
+class Level_03(Level):
     def __init__(self, player, gravity=-.2):
         super().__init__(player, gravity)
         self.createLevel()
@@ -213,7 +227,7 @@ class Level_03(Level_02):
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
 #level 4 - shoot
-class Level_04(Level_03):
+class Level_04(Level):
     def __init__(self, player):
         super().__init__(player)
         self.createLevel()
@@ -245,7 +259,7 @@ class Level_04(Level_03):
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
 #level 5 - double jump
-class Level_05(Level_04):
+class Level_05(Level):
     def __init__(self, player):
         super().__init__(player)
         self.createLevel()
@@ -259,7 +273,9 @@ class Level_05(Level_04):
         self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
 
         for i in range(1, 5):
-            self.level.append([platforms.STONE_PLATFORM_MIDDLE, 240+70*i, 580-100*i])
+            self.level.append(
+                [platforms.STONE_PLATFORM_MIDDLE, 240+70*i, 580-100*i]
+                )
 
         for platform in self.level:
             block = platforms.Platform(platform[0])
@@ -286,7 +302,7 @@ class Level_05(Level_04):
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
 #level 6 - invisibility
-class Level_06(Level_05):
+class Level_06(Level):
     def __init__(self, player):
         super().__init__(player)
         self.createLevel()
@@ -315,7 +331,7 @@ class Level_06(Level_05):
 
 
 #level 7 - increase power
-class Level_07(Level_06):
+class Level_07(Level):
     def __init__(self, player):
         super().__init__(player)
         self.createLevel()
@@ -344,7 +360,7 @@ class Level_07(Level_06):
 
 
 #level 8 - dont fall
-class Level_08(Level_07):
+class Level_08(Level):
     def __init__(self, player):
         super().__init__(player)
         self.createLevel()
@@ -352,7 +368,11 @@ class Level_08(Level_07):
     def createLevel(self):
         self.background = pygame.image.load(BACKGROUND_08).convert()
         for i in range(1, 30):
-            self.level.append([platforms.STONE_PLATFORM_MIDDLE, random.randrange(i, 1700), random.randrange(i, 1000)])
+            self.level.append(
+                [platforms.STONE_PLATFORM_MIDDLE,
+                 random.randrange(i, 1700),
+                 random.randrange(i, 1000)]
+                )
         self.spawn(10)
 
     def tip(self, screen):
@@ -362,7 +382,7 @@ class Level_08(Level_07):
 
 
 #level 9 - twice power
-class Level_09(Level_08):
+class Level_09(Level):
     def __init__(self, player):
         super().__init__(player)
         self.createLevel()
@@ -377,7 +397,7 @@ class Level_09(Level_08):
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
 #level 10 - heal
-class Level_10(Level_09):
+class Level_10(Level):
     def __init__(self, player):
         super().__init__(player)
         self.createLevel()
