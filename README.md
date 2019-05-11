@@ -10,7 +10,7 @@ With simple enemies mechanics and jump skill this is a short game to entertain
   + All libraries needed are listed in [requirements file](requirements.txt).
 
 
-## Configuration 
+## Configuration
 
   First of all, make sure that you have Python installed in your machine
 
@@ -19,21 +19,10 @@ With simple enemies mechanics and jump skill this is a short game to entertain
   3. Look for the right version, use the command `python --version` in your Terminal or Command Prompt to verify.
   + If your version is lower than required one, see [pyenv project](https://github.com/pyenv/pyenv) if keep the lower version is needed, otherwise upgrade them.  
 
-  4. For UNIX platforms, install the libraries required with ``` make requirements ``` in Terminal on the project folder
-  + ``` make all ``` or simply ``` make ``` will install requirements and start the game 
-
-  5. For Windows, after downloaded and installed Python, install libraries double-clicking in the ``` Makefile.bat ``` file on the project folder
-
-## How to use
-
-  For UNIX platforms, use the following commad to start the game:
-
-  
-  ```bash
-  make play 
-  ```
-
-  In Windows, double-click in ``` start_game.bat ``` or just double-click in ``` __init__.py ``` file, inside mathgame folder
+  4. Install the requirements, executing the ``` Makefile ``` appropriated for your operating system
+  + For UNIX, execute ``` chmod +x Makefile.sh && ./Makefile.sh ``` in Terminal, or double-click on it (just mark as executable first)
+  + For Windows, execute ``` Makefile.bat ```, double-clicking it  
+  5. After the installation is finished, the game will start all times you execute the proper ``` Makefile ```
 
 ## License
 
