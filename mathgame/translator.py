@@ -15,8 +15,16 @@ def getSystemLanguage(system):
 
 language = getSystemLanguage(platform.system())
 try:
-    translation_constants = gettext.translation('constants', localedir='locale', languages=[language])
+    translation_constants = gettext.translation(
+        'constants', 
+        localedir='locale', 
+        languages=[language]
+        )
 except FileNotFoundError as error:
-    translation_constants = gettext.translation('constants', localedir='locale', languages=['en'])
+    translation_constants = gettext.translation(
+        'constants', 
+        localedir='locale',
+        languages=['en']
+        )
 finally:
     translation_constants.install()

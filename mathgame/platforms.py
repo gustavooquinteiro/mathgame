@@ -99,7 +99,8 @@ class MovingPlatform(Platform):
  
         # Check the boundaries and see if we need to reverse
         # direction.
-        if self.rect.bottom > self.boundary_bottom or self.rect.top < self.boundary_top:
+        if self.rect.bottom > self.boundary_bottom 
+        or self.rect.top < self.boundary_top:
             self.change_y *= -1
  
         cur_pos = self.rect.x - self.level.world_shift

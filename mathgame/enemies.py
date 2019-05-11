@@ -52,6 +52,9 @@ class Enemy(Character):
             self.change_x += random.randrange(1, 3)
 
     def destroy(self):
-        if self.power is not 0 and pygame.sprite.collide_rect(self, self.player) and self.count == 0 and not self.player.invisible:
+        if self.power is not 0 
+        and pygame.sprite.collide_rect(self, self.player) 
+        and self.count == 0 
+        and not self.player.invisible:
             self.count += 1
             self.player.hit(abs(self.power) * 10)

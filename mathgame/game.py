@@ -91,8 +91,10 @@ class Game:
     def events(self):
         for bullet in self.player.bullets:
             for enemies in self.current_level.enemy_list:
-                if bullet.y - bullet.radius < enemies.rect.y + 147 and bullet.y + bullet.radius > enemies.rect.y:
-                    if bullet.x + bullet.radius > enemies.rect.x and bullet.x - bullet.radius < enemies.rect.x + 52:
+                if bullet.y - bullet.radius < enemies.rect.y + 147 
+                and bullet.y + bullet.radius > enemies.rect.y:
+                    if bullet.x + bullet.radius > enemies.rect.x 
+                    and bullet.x - bullet.radius < enemies.rect.x + 52:
                         enemies.loseenergy(self.player.power)
                         if bullet in self.player.bullets:
                             self.player.bullets.pop(self.player.bullets.index(bullet))
@@ -175,7 +177,7 @@ class Game:
         self.screen.fill(WHITE)
         self.draw_text(TITLE, 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
         self.draw_text(START, 32, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-        self.draw_text(TIP_LVL, 12, BLACK, SCREEN_WIDTH / 6, SCREEN_HEIGHT-15)
+        self.draw_text(TIP_LVL, 12, BLACK, SCREEN_WIDTH / 5, SCREEN_HEIGHT - 21)
         pygame.display.flip()
         self.wait_for_key()
 

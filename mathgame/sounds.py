@@ -6,7 +6,8 @@ import os
 class Sound():
 
     def __init__(self, path='sounds'):
-        pygame.mixer.pre_init(44100, 16, 2, 4096) #frequency, size, channels, buffersize
+        #frequency, size, channels, buffersize
+        pygame.mixer.pre_init(44100, 16, 2, 4096) 
         pygame.mixer.init()
         self.sound_library ={}
         self.playlist= []
