@@ -58,7 +58,7 @@ class Character(pygame.sprite.Sprite):
             self.change_y += gravity
 
         # See if we are on the ground.
-        if self.rect.y >= SCREEN_HEIGHT - self.rect.height 
-        and self.change_y >= 0:
+        if (self.rect.y >= SCREEN_HEIGHT - self.rect.height 
+            and self.change_y >= 0):
             self.change_y = 0
             self.rect.y = SCREEN_HEIGHT - self.rect.height

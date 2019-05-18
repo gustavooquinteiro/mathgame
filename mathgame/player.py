@@ -155,9 +155,9 @@ class Player(Character):
             self.iskill = True
 
     def avoidthevoid(self):
-        if isinstance(self.level, Level_08) or
-        isinstance(self.level, Level_09) or 
-        isinstance(self.level, Level_10):
+        if (isinstance(self.level, Level_08) 
+            or isinstance(self.level, Level_09) 
+            or isinstance(self.level, Level_10)):
             return True
         return False
 
