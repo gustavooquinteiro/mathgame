@@ -9,16 +9,21 @@ class Sound():
         #frequency, size, channels, buffersize
         pygame.mixer.pre_init(44100, 16, 2, 4096) 
         pygame.mixer.init()
-        self.sound_library ={}
+        
+        self.sound_library = {}
         self.playlist= []
+        
         self.load_library(path)
         self.init_playlist()
 
     def load_library(self, path):
         if os.path.isdir(path):
             files = os.listdir(path)
-            for file in files:
-                self.sound_library[path+ os.sep +file] = file
+            for song in files:
+                exploded_file = song.split('.')
+                extension = exploded_file[-1]
+                if extension == "mp3" or extension == "wav":
+                    self.sound_library[path + os.sep + song] = song
 
     def init_playlist(self):
         for music in self.sound_library:
