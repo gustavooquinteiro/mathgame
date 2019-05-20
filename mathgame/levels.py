@@ -63,27 +63,25 @@ class Level():
 
 
     def spawn(self, interval = 5):
-        if isinstance(self, Level_08) or isinstance(self, Level_09) or isinstance(self, Level_10):
+        if (isinstance(self, Level_08) 
+            or isinstance(self, Level_09) 
+            or isinstance(self, Level_10)):
             for i in range(interval):
                 self.enemy_list.append(
                     Enemy(SCREEN_WIDTH,
                           random.randrange(50,SCREEN_HEIGHT),
                           self.player, 
                           self, 
-                          random.randrange(-9, 9))
-                    )
+                          random.randrange(-9, 9)))
         else:
             for i in range(interval):
                 self.enemy_list.append(
                     Enemy(SCREEN_WIDTH, 
                           random.randrange(
-                              round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)
-                              ), 
+                              round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), 
                           self.player, 
                           self, 
-                          random.randrange(-5, 1))
-                    )
-
+                          random.randrange(-5, 1)))
 
 # level 1 = just walk around
 class Level_01(Level):
@@ -115,24 +113,11 @@ class Level_01(Level):
             block.rect.y = platform[2]
             block.player = self.player
             self.platform_list.add(block)
-    """
-        # Add a custom moving platform
-        block = platforms.MovingPlatform(platforms.STONE_PLATFORM_MIDDLE)
-        block.rect.x = 1350
-        block.rect.y = 280
-        block.boundary_left = 1350
-        block.boundary_right = 2500
-        block.change_x = 1
-        block.player = self.player
-        block.level = self
-        self.platform_list.add(block)
-        #self.spawn()
-    """
+    
     def tip(self, screen):
         font = pygame.font.SysFont(FONT, 20)
         text = font.render(TIP_LVL1, 1, WHITE)
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
-
 
 # level 2 - sprint
 class Level_02(Level):
@@ -329,7 +314,6 @@ class Level_06(Level):
         text = font.render(TIP_LVL6, 1, WHITE)
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
-
 #level 7 - increase power
 class Level_07(Level):
     def __init__(self, player):
@@ -358,7 +342,6 @@ class Level_07(Level):
         text = font.render(TIP_LVL7, 1, WHITE)
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
 
-
 #level 8 - dont fall
 class Level_08(Level):
     def __init__(self, player):
@@ -371,15 +354,13 @@ class Level_08(Level):
             self.level.append(
                 [platforms.STONE_PLATFORM_MIDDLE,
                  random.randrange(i, 1700),
-                 random.randrange(i, 1000)]
-                )
+                 random.randrange(i, 1000)])
         self.spawn(10)
 
     def tip(self, screen):
         font = pygame.font.SysFont(FONT, 20)
         text = font.render(TIP_LVL8, 1, WHITE)
         screen.blit(text, (SCREEN_WIDTH - 780, 10))
-
 
 #level 9 - twice power
 class Level_09(Level):

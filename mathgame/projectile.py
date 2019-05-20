@@ -1,5 +1,4 @@
 import pygame
-import platforms
 
 class Projectile(object):
     def __init__(self, x, y, radius, color, facing, damage):
@@ -13,7 +12,10 @@ class Projectile(object):
         
         
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
+        pygame.draw.circle(screen, 
+                           self.color, 
+                           (self.x, self.y), 
+                           self.radius)
         
         
         

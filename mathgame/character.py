@@ -18,8 +18,8 @@ class Character(pygame.sprite.Sprite):
         block_hit_list = pygame.sprite.spritecollide(
             self,
             self.level.platform_list,
-            False
-            )
+            False)
+        
         for block in block_hit_list:
             # If we are moving right,
             # set our right side to the left side of the item we hit
@@ -35,8 +35,8 @@ class Character(pygame.sprite.Sprite):
         block_hit_list = pygame.sprite.spritecollide(
             self, 
             self.level.platform_list, 
-            False
-            )
+            False)
+        
         for block in block_hit_list:
 
             # Reset our position based on the top/bottom of the object.

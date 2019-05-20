@@ -117,8 +117,8 @@ class Player(Character):
         block_hit_list = pygame.sprite.spritecollide(
             self, 
             self.level.platform_list, 
-            False
-            )
+            False)
+        
         for block in block_hit_list:
             # If we are moving right,
             # set our right side to the left side of the item we hit
@@ -135,8 +135,8 @@ class Player(Character):
         block_hit_list = pygame.sprite.spritecollide(
             self,
             self.level.platform_list,
-            False
-            )
+            False)
+        
         for block in block_hit_list:
 
             # Reset our position based on the top/bottom of the object.
@@ -155,43 +155,44 @@ class Player(Character):
             self.iskill = True
 
     def avoidthevoid(self):
-        if (isinstance(self.level, Level_08) 
-            or isinstance(self.level, Level_09) 
-            or isinstance(self.level, Level_10)):
-            return True
-        return False
+        return (isinstance(self.level, Level_08) 
+                or isinstance(self.level, Level_09) 
+                or isinstance(self.level, Level_10))
 
     def shoot(self):
-        if isinstance(self.level, Level_04):
+        if (isinstance(self.level, Level_04)
+            or isinstance(self.level, Level_05)
+            or isinstance(self.level, Level_06)
+            or isinstance(self.level, Level_07)
+            or isinstance(self.level, Level_08)
+            or isinstance(self.level, Level_09)
+            or isinstance(self.level, Level_10)):
             if self.direction is "R":
                 facing = 1
-                self.bullets.append(
-                    Projectile(
-                        round(self.rect.x + 65),
-                        round(self.rect.y + 55),
-                        6*self.power, 
-                        GREEN,
-                        facing,
-                        self.power
-                        )
-                    )
+                shift = 65
             else:
                 facing = -1
-                self.bullets.append(
-                    Projectile(
-                        round(self.rect.x - 10),
-                        round(self.rect.y + 55), 
-                        6*self.power,
-                        GREEN,
-                        facing,
-                        self.power
-                        )
-                    )
-
+                shift = -10
+    
+            self.bullets.append(
+                Projectile(
+                    round(self.rect.x + shift),
+                    round(self.rect.y + 55),
+                    6*self.power, 
+                    GREEN,
+                    facing,
+                    self.power))
 
     def jump(self):
         """ Called when user hits 'jump' button. """
-        if isinstance(self.level, Level_03):
+        if (isinstance(self.level, Level_03) 
+            or isinstance(self.level, Level_04)
+            or isinstance(self.level, Level_05)
+            or isinstance(self.level, Level_06)
+            or isinstance(self.level, Level_07)
+            or isinstance(self.level, Level_08)
+            or isinstance(self.level, Level_09)
+            or isinstance(self.level, Level_10)):
             # move down a bit and see if there is a platform below us.
             # Move down 2 pixels because it doesn't work well if we only move down 1
             # when working with a platform moving down.
@@ -200,18 +201,23 @@ class Player(Character):
             platform_hit_list = pygame.sprite.spritecollide(
                 self,
                 self.level.platform_list,
-                False
-                )
+                False)
             self.rect.y -= 2
 
             # If it is ok to jump, set our speed upwards
-            if len(platform_hit_list) > 0 or self.rect.bottom > SCREEN_HEIGHT:
+            if (len(platform_hit_list) > 0 
+                or self.rect.bottom > SCREEN_HEIGHT):
                 self.change_y = -10
             self.doublejump()
 
 
     def doublejump(self):
-        if isinstance(self.level, Level_05):
+        if (isinstance(self.level, Level_05)
+            or isinstance(self.level, Level_06)
+            or isinstance(self.level, Level_07)
+            or isinstance(self.level, Level_08)
+            or isinstance(self.level, Level_09)
+            or isinstance(self.level, Level_10)):
             self.countspace += 1
             if self.countspace > 1:
                 self.change_y = -20
@@ -223,9 +229,13 @@ class Player(Character):
             self.iskill = True
 
     def increasepower(self):
-        if isinstance(self.level, Level_09):
+        if (isinstance(self.level, Level_09)
+            or isinstance(self.level, Level_10)):
             self.power += 2
-        if isinstance(self.level, Level_07):
+        if (isinstance(self.level, Level_07)
+            or isinstance(self.level, Level_08)
+            or isinstance(self.level, Level_09)
+            or isinstance(self.level, Level_10)):
             self.power += 1
 
     def sprint(self, direction):
@@ -240,7 +250,11 @@ class Player(Character):
             self.health = min(self.health + 10, 100)
 
     def invisibility(self):
-        if isinstance(self.level, Level_06):
+        if (isinstance(self.level, Level_06)
+            or isinstance(self.level, Level_07)
+            or isinstance(self.level, Level_08)
+            or isinstance(self.level, Level_09)
+            or isinstance(self.level, Level_10)):
             self.invisible = not self.invisible
 
     # Player-controlled movement:
@@ -249,7 +263,15 @@ class Player(Character):
         if self.countrepeatleft <= 1:
             self.change_x = -6
             self.direction = "L"
-        if isinstance(self.level, Level_02):
+        if (isinstance(self.level, Level_02)
+            or isinstance(self.level, Level_03)
+            or isinstance(self.level, Level_04)
+            or isinstance(self.level, Level_05)
+            or isinstance(self.level, Level_06)
+            or isinstance(self.level, Level_07)
+            or isinstance(self.level, Level_08)
+            or isinstance(self.level, Level_09)
+            or isinstance(self.level, Level_10)):
             self.countrepeatleft += 1
             if self.countrepeatleft > 1:
                 self.sprint(self.direction)
@@ -260,7 +282,15 @@ class Player(Character):
         if self.countrepeatright <= 1:
             self.change_x = 6
             self.direction = "R"
-        if isinstance(self.level, Level_02):
+        if (isinstance(self.level, Level_02)
+            or isinstance(self.level, Level_03)
+            or isinstance(self.level, Level_04)
+            or isinstance(self.level, Level_05)
+            or isinstance(self.level, Level_06)
+            or isinstance(self.level, Level_07)
+            or isinstance(self.level, Level_08)
+            or isinstance(self.level, Level_09)
+            or isinstance(self.level, Level_10)):
             self.countrepeatright += 1
             if self.countrepeatright > 1:
                 self.sprint(self.direction)

@@ -1,5 +1,5 @@
 import pygame
-import levels
+from levels import *
 from constants import *
 from player import Player
 from enemies import Enemy
@@ -10,35 +10,39 @@ class Game:
     def __init__(self):
         pygame.init()
         self.background_sound = Sound()
+        
         pygame.key.set_repeat(50, 50)
         size = [SCREEN_WIDTH, SCREEN_HEIGHT]
+        
         self.screen = pygame.display.set_mode(size)
         pygame.display.set_caption(TITLE)
+        
         self.clock = pygame.time.Clock()
         self.font_name = pygame.font.match_font(FONT)
+        
         self.running = True
         self.isover = False
         self.gameispaused = False
+        self.levels = {
+            1: Level_01,
+            2: Level_02,
+            3: Level_03,
+            4: Level_04,
+            5: Level_05,
+            6: Level_06,
+            7: Level_07,
+            8: Level_08,
+            9: Level_09,
+            10: Level_10}
+        
         self.show_start_screen()
-
-
+        
     def new(self, level = 0):
         self.player = Player()
-        self.level_list = [levels.Level_01(self.player),
-                           levels.Level_02(self.player),
-                           levels.Level_03(self.player),
-                           levels.Level_04(self.player),
-                           levels.Level_05(self.player),
-                           levels.Level_06(self.player),
-                           levels.Level_07(self.player),
-                           levels.Level_08(self.player),
-                           levels.Level_09(self.player),
-                           levels.Level_10(self.player)
-                         ]
         self.active_sprite_list = pygame.sprite.Group()
         self.active_sprite_list.add(self.player)
-        self.level = level
-        self.current_level = self.level_list[self.level]
+        self.level = level + 1
+        self.current_level = self.levels[self.level](self.player)
         self.player.level = self.current_level
         self.background_sound.next_song()
         self.run()
@@ -49,7 +53,7 @@ class Game:
             self.events()
             self.update()
             self.draw()
-        self.endgame()
+        self.end_game()
 
 
     def update(self):
@@ -75,18 +79,18 @@ class Game:
                 self.current_level.shift_world(diff)
 
             # If the player gets to the end of the level, go to the next level
-            current_position = self.player.rect.x + self.current_level.world_shift
-            if current_position < self.current_level.level_limit:
+            current_position = (self.player.rect.x 
+                                + self.current_level.world_shift)
+            if current_position < self.current_level.level_limit:                
                 self.player.rect.x = 120
-                if self.level < len(self.level_list)-1:
+                if self.level < len(self.levels)-1:
                     self.level += 1
-                    self.current_level = self.level_list[self.level]
+                    self.current_level = self.levels[self.level](self.player)
                     self.player.level = self.current_level
                 else:
-                   self.endscreen();
+                   self.end_screen();
         else:
             return
-
 
     def events(self):
         for bullet in self.player.bullets:
@@ -97,12 +101,12 @@ class Game:
                         and bullet.x - bullet.radius < enemies.rect.x + 52):
                         enemies.loseenergy(self.player.power)
                         if bullet in self.player.bullets:
-                            self.player.bullets.pop(self.player.bullets.index(bullet))
+                            self.player.bullets.remove(bullet)
             if bullet.x < SCREEN_WIDTH and bullet.x > 0:
                 bullet.x += bullet.vel
             else:
                 if bullet in self.player.bullets:
-                    self.player.bullets.pop(self.player.bullets.index(bullet))
+                    self.player.bullets.remove(bullet)
 
         for event in pygame.event.get():
             if event.type == pygame.USEREVENT:
@@ -114,7 +118,7 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     self.gameispaused = True
-                    self.pausescreen()
+                    self.pause_screen()
 
                 if event.key == pygame.K_LEFT:
                     self.player.sprint(self.player.direction)
@@ -127,8 +131,18 @@ class Game:
                 if event.key == pygame.K_UP:
                     self.last_key_pressed = pygame.K_UP
                     if self.level < 2:
-                        self.draw_text(GRAVITY_WARN, 24, RED, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-                        self.draw_text(OPTIONS, 22, RED, SCREEN_WIDTH/2, SCREEN_HEIGHT * 3/4)
+                        self.draw_text(GRAVITY_WARN,
+                                       24,
+                                       RED, 
+                                       SCREEN_WIDTH/2,
+                                       SCREEN_HEIGHT/2)
+                        
+                        self.draw_text(OPTIONS, 
+                                       22,
+                                       RED,
+                                       SCREEN_WIDTH/2,
+                                       SCREEN_HEIGHT * 3/4)
+                        
                         pygame.display.flip()
                         self.wait_for_key()
                     else:
@@ -153,10 +167,20 @@ class Game:
 
         if not self.player.invisible:
             self.active_sprite_list.draw(self.screen)
-            text = font.render(HEALTH .format(self.player.health), 1, RED)
-            self.screen.blit(text, (self.player.rect.x -10, self.player.rect.y -20))
-            text = font.render(PRESS_ME, 1, WHITE)
-            self.screen.blit(text, (SCREEN_WIDTH - 200, 10))
+            text = font.render(HEALTH .format(self.player.health), 
+                               1, 
+                               RED)
+            
+            self.screen.blit(text, 
+                             (self.player.rect.x -10, 
+                              self.player.rect.y -20))
+                             
+            text = font.render(PRESS_ME,
+                               1,
+                               WHITE)
+            
+            self.screen.blit(text,
+                             (SCREEN_WIDTH - 200, 10))
 
         for bullet in self.player.bullets:
             bullet.draw(self.screen)
@@ -166,8 +190,13 @@ class Game:
         for enemies in self.current_level.enemy_list:
             enemies.draw(self.screen)
             if enemies.power is not 0:
-                text = font.render(LEVEL .format(enemies.power), 1, WHITE)
-                self.screen.blit(text, (enemies.rect.x- 10, enemies.rect.y - 20))
+                text = font.render(LEVEL .format(enemies.power),
+                                   1,
+                                   WHITE)
+                
+                self.screen.blit(text, 
+                                 (enemies.rect.x- 10,
+                                  enemies.rect.y - 20))
 
         pygame.display.flip()
         pygame.display.update()
@@ -175,24 +204,60 @@ class Game:
 
     def show_start_screen(self):
         self.screen.fill(WHITE)
-        self.draw_text(TITLE, 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
-        self.draw_text(START, 32, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-        self.draw_text(TIP_LVL, 12, BLACK, SCREEN_WIDTH / 5, SCREEN_HEIGHT - 21)
+        
+        self.draw_text(TITLE, 
+                       48,
+                       BLACK, 
+                       SCREEN_WIDTH /2, 
+                       SCREEN_HEIGHT / 4)
+        
+        self.draw_text(START, 
+                       32, 
+                       BLACK, 
+                       SCREEN_WIDTH / 2, 
+                       SCREEN_HEIGHT / 2)
+        
+        self.draw_text(TIP_LVL, 
+                       12,
+                       BLACK, 
+                       SCREEN_WIDTH / 5,
+                       SCREEN_HEIGHT - 21)
+        
         pygame.display.flip()
         self.wait_for_key()
 
     def gameover(self):
         self.background_sound.stop_music()
         self.screen.fill(WHITE)
-        self.draw_text(GAME_OVER, 48, BLACK, SCREEN_WIDTH /2, SCREEN_HEIGHT / 4)
-        self.draw_text(OPTIONS, 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
+        self.draw_text(GAME_OVER, 
+                       48,
+                       BLACK,
+                       SCREEN_WIDTH /2,
+                       SCREEN_HEIGHT / 4)
+        
+        self.draw_text(OPTIONS,
+                       22,
+                       BLACK, 
+                       SCREEN_WIDTH / 2,
+                       SCREEN_HEIGHT * 3 / 4)
+        
         pygame.display.flip()
         self.wait_for_key()
 
-    def pausescreen(self):
+    def pause_screen(self):
         self.current_level.tip(self.screen)
-        self.draw_text(GAME_PAUSED, 22, WHITE, SCREEN_WIDTH /2, SCREEN_HEIGHT/4)
-        self.draw_text(OPTIONS, 22, WHITE,SCREEN_WIDTH /2, SCREEN_HEIGHT * 1/2 )
+        self.draw_text(GAME_PAUSED, 
+                       22,
+                       WHITE,
+                       SCREEN_WIDTH /2,
+                       SCREEN_HEIGHT/4)
+        
+        self.draw_text(OPTIONS,
+                       22,
+                       WHITE,
+                       SCREEN_WIDTH /2,
+                       SCREEN_HEIGHT * 1/2)
+        
         pygame.display.flip()
         self.wait_for_key()
 
@@ -209,6 +274,7 @@ class Game:
                         self.running = False
                         self.playing = False
                         waiting = False
+                        
                     if event.key == pygame.K_RETURN:
                         waiting = False
                         if self.gameispaused:
@@ -217,11 +283,21 @@ class Game:
                             self.isover = False
                             self.new()
 
-    def endscreen(self):
+    def end_screen(self):
         self.screen.fill(WHITE)
         self.isover = True
-        self.draw_text(GAME_WIN, 40, BLACK, SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-        self.draw_text(OPTIONS, 22, BLACK, SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4)
+        self.draw_text(GAME_WIN,
+                       40,
+                       BLACK,
+                       SCREEN_WIDTH/2,
+                       SCREEN_HEIGHT/2)
+        
+        self.draw_text(OPTIONS,
+                       22,
+                       BLACK,
+                       SCREEN_WIDTH / 2,
+                       SCREEN_HEIGHT * 3 / 4)
+        
         pygame.display.flip()
         self.wait_for_key()
 
@@ -232,6 +308,6 @@ class Game:
         text_rect.midtop = (x, y)
         self.screen.blit(text_surface, text_rect)
 
-    def endgame(self):
+    def end_game(self):
         if self.isover and not self.running:
             pygame.quit()
