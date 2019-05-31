@@ -1,4 +1,5 @@
 # Math Game  
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6ef29bc45e904883bb46104eba7580b0)](https://app.codacy.com/app/gustavooquinteiro/mathgame?utm_source=github.com&utm_medium=referral&utm_content=gustavooquinteiro/mathgame&utm_campaign=Badge_Grade_Dashboard)
 ![Python version supported](https://img.shields.io/pypi/pyversions/django.svg) ![Platforms supported](https://img.shields.io/badge/platform-win--64%20%7C%20linux--64-lightgrey.svg) ![License](https://img.shields.io/pypi/l/pytz.svg) [![codecov](https://codecov.io/gh/gustavooquinteiro/mathgame/branch/master/graph/badge.svg)](https://codecov.io/gh/gustavooquinteiro/mathgame)
 ![Updates](https://pyup.io/repos/github/gustavooquinteiro/mathgame/shield.svg) ![GitHub release](https://img.shields.io/github/release/gustavooquinteiro/mathgame.svg?color=9cf)
 
