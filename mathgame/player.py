@@ -115,10 +115,10 @@ class Player(Character):
 
         # See if we hit anything
         block_hit_list = pygame.sprite.spritecollide(
-            self, 
-            self.level.platform_list, 
+            self,
+            self.level.platform_list,
             False)
-        
+
         for block in block_hit_list:
             # If we are moving right,
             # set our right side to the left side of the item we hit
@@ -136,7 +136,7 @@ class Player(Character):
             self,
             self.level.platform_list,
             False)
-        
+
         for block in block_hit_list:
 
             # Reset our position based on the top/bottom of the object.
@@ -155,8 +155,8 @@ class Player(Character):
             self.iskill = True
 
     def avoidthevoid(self):
-        return (isinstance(self.level, Level_08) 
-                or isinstance(self.level, Level_09) 
+        return (isinstance(self.level, Level_08)
+                or isinstance(self.level, Level_09)
                 or isinstance(self.level, Level_10))
 
     def shoot(self):
@@ -173,19 +173,19 @@ class Player(Character):
             else:
                 facing = -1
                 shift = -10
-    
+
             self.bullets.append(
                 Projectile(
                     round(self.rect.x + shift),
                     round(self.rect.y + 55),
-                    6*self.power, 
+                    6*self.power,
                     GREEN,
                     facing,
                     self.power))
 
     def jump(self):
         """ Called when user hits 'jump' button. """
-        if (isinstance(self.level, Level_03) 
+        if (isinstance(self.level, Level_03)
             or isinstance(self.level, Level_04)
             or isinstance(self.level, Level_05)
             or isinstance(self.level, Level_06)
@@ -205,7 +205,7 @@ class Player(Character):
             self.rect.y -= 2
 
             # If it is ok to jump, set our speed upwards
-            if (len(platform_hit_list) > 0 
+            if (len(platform_hit_list) > 0
                 or self.rect.bottom > SCREEN_HEIGHT):
                 self.change_y = -10
             self.doublejump()

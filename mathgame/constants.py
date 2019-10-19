@@ -59,3 +59,23 @@ OPTIONS = _("Press q to quit or enter to play again")
 GAME_PAUSED = _("Game Paused")
 GAME_WIN = _("You Won!!")
 GRAVITY_WARN = _('The gravity here is too high to jump')
+
+SOUNDTRACK = [
+    'https://www.youtube.com/watch?v=_mVW8tgGY_w',
+    'https://www.youtube.com/watch?v=4Tr0otuiQuU',
+    'https://www.youtube.com/watch?v=JTc1mDieQI8',
+    'https://www.youtube.com/watch?v=H7hGiZ579cs',
+    'https://www.youtube.com/watch?v=uC-USAB530A',
+    'https://www.youtube.com/watch?v=YFD2PPAqNbw'
+    ]
+
+DL_OPTIONS = {
+    'format': 'bestaudio/best',
+    'outtmpl': '%(title)s.%(ext)s',
+    'nocheckercertificate': True,
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
+        }],
+    }

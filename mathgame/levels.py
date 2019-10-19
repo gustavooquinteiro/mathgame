@@ -60,27 +60,35 @@ class Level():
         for enemy in self.enemy_list:
             enemy.rect.x += shift_x
 
+    def add_platform(self):
+        # Go through the array above and add platforms
+        for platform in self.level:
+            block = platforms.Platform(platform[0])
+            block.rect.x = platform[1]
+            block.rect.y = platform[2]
+            block.player = self.player
+            self.platform_list.add(block)
 
 
     def spawn(self, interval = 5):
-        if (isinstance(self, Level_08) 
-            or isinstance(self, Level_09) 
+        if (isinstance(self, Level_08)
+            or isinstance(self, Level_09)
             or isinstance(self, Level_10)):
-            for i in range(interval):
+            for __ in range(interval):
                 self.enemy_list.append(
                     Enemy(SCREEN_WIDTH,
                           random.randrange(50,SCREEN_HEIGHT),
-                          self.player, 
-                          self, 
+                          self.player,
+                          self,
                           random.randrange(-9, 9)))
         else:
-            for i in range(interval):
+            for __ in range(interval):
                 self.enemy_list.append(
-                    Enemy(SCREEN_WIDTH, 
+                    Enemy(SCREEN_WIDTH,
                           random.randrange(
-                              round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)), 
-                          self.player, 
-                          self, 
+                              round(SCREEN_HEIGHT - SCREEN_HEIGHT / 4, SCREEN_HEIGHT)),
+                          self.player,
+                          self,
                           random.randrange(-5, 1)))
 
 # level 1 = just walk around
@@ -104,16 +112,8 @@ class Level_01(Level):
         for i in range(1, SCREEN_WIDTH - 600):
             self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
         self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
+        self.add_platform()
 
-
-        # Go through the array above and add platforms
-        for platform in self.level:
-            block = platforms.Platform(platform[0])
-            block.rect.x = platform[1]
-            block.rect.y = platform[2]
-            block.player = self.player
-            self.platform_list.add(block)
-    
     def tip(self, screen):
         font = pygame.font.SysFont(FONT, 20)
         text = font.render(TIP_LVL1, 1, WHITE)
@@ -141,14 +141,7 @@ class Level_02(Level):
             self.level.append([platforms.GRASS_MIDDLE, 20+70*i, 500])
         self.level.append([platforms.GRASS_RIGHT, 1400, 500])
         self.level.append([platforms.GRASS_MIDDLE, 1600, 500])
-
-        # Go through the array above and add platforms
-        for platform in self.level:
-            block = platforms.Platform(platform[0])
-            block.rect.x = platform[1]
-            block.rect.y = platform[2]
-            block.player = self.player
-            self.platform_list.add(block)
+        self.add_platform()
 
         # Add a custom moving platform
         block = platforms.MovingPlatform(platforms.STONE_PLATFORM_MIDDLE)
@@ -188,12 +181,7 @@ class Level_03(Level):
         for i in range(1, 10):
             self.level.append([platforms.GRASS_MIDDLE, 1500+70*i, 500-50*i])
 
-        for platform in self.level:
-            block = platforms.Platform(platform[0])
-            block.rect.x = platform[1]
-            block.rect.y = platform[2]
-            block.player = self.player
-            self.platform_list.add(block)
+        self.add_platform()
 
         for i in range(1,3):
             block = platforms.MovingPlatform(platforms.STONE_PLATFORM_MIDDLE)
@@ -228,12 +216,7 @@ class Level_04(Level):
         for i in range(1, 3):
             self.level.append([platforms.GRASS_MIDDLE, 100+70*i, 200-50*i])
 
-        for platform in self.level:
-            block = platforms.Platform(platform[0])
-            block.rect.x = platform[1]
-            block.rect.y = platform[2]
-            block.player = self.player
-            self.platform_list.add(block)
+        self.add_platform()
 
         self.spawn()
 
@@ -259,15 +242,9 @@ class Level_05(Level):
 
         for i in range(1, 5):
             self.level.append(
-                [platforms.STONE_PLATFORM_MIDDLE, 240+70*i, 580-100*i]
-                )
+                [platforms.STONE_PLATFORM_MIDDLE, 240+70*i, 580-100*i])
 
-        for platform in self.level:
-            block = platforms.Platform(platform[0])
-            block.rect.x = platform[1]
-            block.rect.y = platform[2]
-            block.player = self.player
-            self.platform_list.add(block)
+        self.add_platform()
 
         block = platforms.MovingPlatform(platforms.STONE_PLATFORM_MIDDLE)
         block.rect.x = 1000
@@ -299,14 +276,7 @@ class Level_06(Level):
         for i in range(1, 30):
             self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
         self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
-
-        for platform in self.level:
-            block = platforms.Platform(platform[0])
-            block.rect.x = platform[1]
-            block.rect.y = platform[2]
-            block.player = self.player
-            self.platform_list.add(block)
-
+        self.add_platform()
         self.spawn(10)
 
     def tip(self, screen):
@@ -327,14 +297,7 @@ class Level_07(Level):
         for i in range(1, 30):
             self.level.append([platforms.GRASS_MIDDLE, 70*i, 500])
         self.level.append([platforms.GRASS_RIGHT, 70*i, 500])
-
-        for platform in self.level:
-            block = platforms.Platform(platform[0])
-            block.rect.x = platform[1]
-            block.rect.y = platform[2]
-            block.player = self.player
-            self.platform_list.add(block)
-
+        self.add_platform()
         self.spawn()
 
     def tip(self, screen):

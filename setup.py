@@ -1,6 +1,5 @@
 import io
 import os
-import sys
 from shutil import rmtree
 from setuptools import setup, find_packages
 
@@ -35,21 +34,21 @@ with open (os.path.join(here, 'requirements.txt')) as required:
 setup(
       name=NAME,
       version=about['__version__'],
-      description=DESCRIPTION, 
+      description=DESCRIPTION,
       url=URL,
       author=AUTHOR,
       author_email=EMAIL,
       long_description=long_description,
       long_description_content_type='text/markdown',
       python_requires=REQUIRES_PYTHON,
-      license='MIT', 
+      license='MIT',
       packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
       install_requires=requirements,
       include_package_data=True,
       package_data={
             'mathgame':[
-                        'spritesheet/*.png', 
-                        'sounds/*.mp3', 
+                        'spritesheet/*.png',
+                        'sounds/*.mp3',
                         'sounds/*.wav',
                         'locale/**'
                         ],
