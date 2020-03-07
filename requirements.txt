@@ -1,5 +1,5 @@
 altgraph==0.17
-future==0.18.1
+future==0.18.2
 macholib==1.14
 pygame==1.9.6
 pefile==2019.4.18
