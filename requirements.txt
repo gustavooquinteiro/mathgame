@@ -1,7 +1,7 @@
 altgraph==0.17
 future==0.18.2
 macholib==1.14
+pefile==2022.5.30
 pygame==2.1.2
-pefile==2019.4.18
 PyInstaller==3.6
 youtube-dl==2021.12.17
